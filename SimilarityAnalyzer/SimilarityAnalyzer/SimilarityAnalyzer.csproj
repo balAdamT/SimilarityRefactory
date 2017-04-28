@@ -39,12 +39,15 @@
     <Compile Include="Helpers\EnumerablePairHelpers.cs" />
     <Compile Include="InClassMethodSimilarityAnalyzer.cs" />
     <Compile Include="Logic\FragmentExplrorer.cs" />
+    <Compile Include="Logic\SyntaxCompare.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="_Example\Complex Class.cs" />
+    <Compile Include="_Example\SimpleClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

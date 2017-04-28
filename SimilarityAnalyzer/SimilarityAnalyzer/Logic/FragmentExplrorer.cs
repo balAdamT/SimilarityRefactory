@@ -7,15 +7,23 @@ using System.Threading.Tasks;
 
 namespace SimilarityAnalyzer.Logic
 {
-    static class FragmentExplorer
+    static class TreeExplorer
     {
-        public static void ForEachFragment(SyntaxNode parent, Action<SyntaxNode> action)
+        public static void ForEachNode(SyntaxNode parent, Action<SyntaxNode> action)
         {
             action.Invoke(parent);
 
             foreach(var child in parent.DescendantNodes())
             {
-                ForEachFragment(child, action);
+                action.Invoke(parent);
+            }
+        }
+
+        public static void ForEachLeaf(SyntaxNode parent, Action<SyntaxNode> action)
+        {
+            foreach(var node in parent.DescendantNodes().Where(node => node.ChildNodes().Any() == false))
+            {
+                action.Invoke(node);
             }
         }
     }

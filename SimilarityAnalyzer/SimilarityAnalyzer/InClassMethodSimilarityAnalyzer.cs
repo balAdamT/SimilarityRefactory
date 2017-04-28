@@ -38,10 +38,18 @@ namespace SimilarityAnalyzer
             foreach(MethodDeclarationSyntax method 
                 in @class.Members.Where(member => member.Kind() == SyntaxKind.MethodDeclaration))
             {
-                FragmentExplorer.ForEachFragment(method, fragment => classMap.AddFragmentOfMethod(method, fragment));
+                TreeExplorer.ForEachLeaf(method, fragment => classMap.AddFragmentOfMethod(method, fragment));
             }
 
             var pairs = classMap.GetOuterPairs();
+
+            List<IEnumerable<NodePair>> similarities = new List<IEnumerable<NodePair>>();
+            foreach (var pair in pairs)
+            {
+                var similarity = SyntaxCompare.FindCommonSuperTree(pair.Left, pair.Right);
+                if (similarity.Any())
+                    similarities.Add(similarity);
+            }
         }
     }
 }
