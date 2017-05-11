@@ -32,7 +32,19 @@ namespace SimilarityAnalyzer.Data
 
             var nodePairs = nodeListPairs.Select(listPair => EnumerablePairHelpers.OuterPairs(listPair.Item1, listPair.Item2)).SelectMany(x => x);
 
-            return nodePairs.Select(pair => new NodePair(pair.Item1, pair.Item2));
+            return nodePairs.Select(pair => new NodePair(pair));
+        }
+
+        public IEnumerable<NodePair> GetInnerPairs()
+        {
+            List<NodePair> nodePairs = new List<NodePair>();
+
+            foreach(var nodes in map.Values)
+            {
+                EnumerablePairHelpers.InnerPairs(nodes).ForEach(tuple => nodePairs.Add(new NodePair(tuple)));
+            }
+
+            return nodePairs;
         }
     }
 }

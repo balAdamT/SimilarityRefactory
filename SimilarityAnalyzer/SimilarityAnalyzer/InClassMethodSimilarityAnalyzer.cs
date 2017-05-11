@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 using SimilarityAnalyzer.Logic;
 using SimilarityAnalyzer.Data;
+using SimilarityAnalyzer.SimilarityFinders;
 
 namespace SimilarityAnalyzer
 {
@@ -26,30 +27,24 @@ namespace SimilarityAnalyzer
 
         public override void Initialize(AnalysisContext context)
         {
-            context.RegisterSyntaxNodeAction(AnalyzeClass, SyntaxKind.ClassDeclaration);
+            //context.RegisterSyntaxNodeAction(AnalyzeClass, SyntaxKind.ClassDeclaration);
+            context.RegisterSyntaxNodeAction(AnalyzeClassSuperTrees, SyntaxKind.ClassDeclaration);
         }
 
-        private void AnalyzeClass(SyntaxNodeAnalysisContext context)
+        private void AnalyzeClassSuperTrees(SyntaxNodeAnalysisContext context)
         {
             var @class = context.Node as ClassDeclarationSyntax;
 
-            var classMap = new MethodFragmentMap();
+            var finder = new CommonSuperTreeFinder(@class);
+            var similarities = finder.Similarities;
+        }
 
-            foreach(MethodDeclarationSyntax method 
-                in @class.Members.Where(member => member.Kind() == SyntaxKind.MethodDeclaration))
-            {
-                TreeExplorer.ForEachLeaf(method, fragment => classMap.AddFragmentOfMethod(method, fragment));
-            }
+        private void AnalyzeClassSubTrees(SyntaxNodeAnalysisContext context)
+        {
+            var @class = context.Node as ClassDeclarationSyntax;
 
-            var pairs = classMap.GetOuterPairs();
-
-            List<IEnumerable<NodePair>> similarities = new List<IEnumerable<NodePair>>();
-            foreach (var pair in pairs)
-            {
-                var similarity = SyntaxCompare.FindCommonSuperTree(pair.Left, pair.Right);
-                if (similarity.Any())
-                    similarities.Add(similarity);
-            }
+            var finder = new CommonSubTreeFinder(@class);
+            var similarities = finder.Similarities;
         }
     }
 }

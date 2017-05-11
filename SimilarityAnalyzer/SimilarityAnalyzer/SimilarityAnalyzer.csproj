@@ -36,6 +36,8 @@
   <ItemGroup>
     <Compile Include="Data\NodePair.cs" />
     <Compile Include="Data\MethodFragmentMap.cs" />
+    <Compile Include="Data\SimilarityData.cs" />
+    <Compile Include="Helpers\EnumerableActions.cs" />
     <Compile Include="Helpers\EnumerablePairHelpers.cs" />
     <Compile Include="InClassMethodSimilarityAnalyzer.cs" />
     <Compile Include="Logic\FragmentExplrorer.cs" />
@@ -46,6 +48,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SimilarityFinders\CommonSubTreeFinder.cs" />
+    <Compile Include="SimilarityFinders\CommonSuperTreeFinder.cs" />
+    <Compile Include="SimilarityFinders\Finder.cs" />
     <Compile Include="_Example\Complex Class.cs" />
     <Compile Include="_Example\SimpleClass.cs" />
   </ItemGroup>
@@ -118,6 +123,7 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="AfterBuild">
     <GetAssemblyIdentity AssemblyFiles="$(OutDir)\$(AssemblyName).dll">

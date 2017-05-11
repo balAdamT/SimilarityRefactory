@@ -71,12 +71,14 @@ namespace SimilarityAnalyzer.Test
 
         protected override CodeFixProvider GetCSharpCodeFixProvider()
         {
-            return new SimilarityAnalyzerCodeFixProvider();
+            //return new SimilarityAnalyzerCodeFixProvider();
+            throw new NotImplementedException();
         }
 
         protected override DiagnosticAnalyzer GetCSharpDiagnosticAnalyzer()
         {
-            return new SimilarityAnalyzerAnalyzer();
+            //return new SimilarityAnalyzerAnalyzer();
+            throw new NotImplementedException();
         }
     }
 }
