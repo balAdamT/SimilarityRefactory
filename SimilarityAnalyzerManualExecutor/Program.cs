@@ -33,7 +33,7 @@ namespace SimilarityAnalyzerManualExecutor
             var projects = solution.Projects.Where(p => p.Name.EndsWith("-4.5"));
 
             //Write a header
-            Console.WriteLine("id,path,type,runtimeMS,#pairs,matches,longestmatch,startleft,startright,longestmatchnodeifsup");
+            Console.WriteLine("id,path,type,runtimeMS,#pairs,matches,longestmatch,linespanleft,linespanright,longestmatchnodeifsup");
 
             Parallel.ForEach(projects, project =>
             {
@@ -46,18 +46,20 @@ namespace SimilarityAnalyzerManualExecutor
                         var subFinder = new CommonSubTreeFinder(@class);
                         var superFinder = new CommonSuperTreeFinder(@class);
                         var id = $"{projectName} {@class.Identifier} {Interlocked.Increment(ref classNumber)}";
-                        DataToConsole(id, @class.SyntaxTree.FilePath, "sub", subFinder.MatchData);
-                        DataToConsole(id, @class.SyntaxTree.FilePath, "sup", superFinder.MatchData);
+                        DataToConsole(id, @class.SyntaxTree.FilePath, "sub", subFinder.MatchData, @class.SyntaxTree);
+                        DataToConsole(id, @class.SyntaxTree.FilePath, "sup", superFinder.MatchData, @class.SyntaxTree);
                     }
                 });
             });
             Console.ReadKey();
         }
 
-        static void DataToConsole(string id, string path, string type, SimilarityData data)
+        static void DataToConsole(string id, string path, string type, SimilarityData data, SyntaxTree containingTree)
         {
             var maxMatchSpanByLength = data.MatchSpans.DefaultIfEmpty(new Tuple<TextSpan,TextSpan>(new TextSpan(), new TextSpan())).MaxBy(s => s.Item1.Length);
-            Console.WriteLine($"{id},{path},{type},{data.RunTimeInMs},{data.InnerPairs + data.OuterPairs},{data.Matches},{maxMatchSpanByLength.Item1.Length},{maxMatchSpanByLength.Item1.Start},{maxMatchSpanByLength.Item2.Start},{data.MatchNodeLengths.DefaultIfEmpty(0).Max()}");
+            var line1 = containingTree.GetLineSpan(maxMatchSpanByLength.Item1);
+            var line2 = containingTree.GetLineSpan(maxMatchSpanByLength.Item2);
+            Console.WriteLine($"{id},{path},{type},{data.RunTimeInMs},{data.InnerPairs + data.OuterPairs},{data.Matches},{maxMatchSpanByLength.Item1.Length},{line1.StartLinePosition.Line}-{line1.EndLinePosition.Line},{line2.StartLinePosition.Line}-{line2.EndLinePosition.Line},{data.MatchNodeLengths.DefaultIfEmpty(0).Max()}");
         }
     }
 }
