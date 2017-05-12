@@ -39,6 +39,7 @@
     <Compile Include="Data\SimilarityData.cs" />
     <Compile Include="Helpers\EnumerableActions.cs" />
     <Compile Include="Helpers\EnumerablePairHelpers.cs" />
+    <Compile Include="Helpers\MaxByExtension.cs" />
     <Compile Include="InClassMethodSimilarityAnalyzer.cs" />
     <Compile Include="Logic\FragmentExplrorer.cs" />
     <Compile Include="Logic\SyntaxCompare.cs" />

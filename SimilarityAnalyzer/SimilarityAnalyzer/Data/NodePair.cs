@@ -1,4 +1,5 @@
 ﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Text;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,14 @@ namespace SimilarityAnalyzer.Data
         {
             Left = pair.Item1;
             Right = pair.Item2;
+        }
+
+        public Tuple<TextSpan, TextSpan> SpainPair
+        {
+            get
+            {
+                return new Tuple<TextSpan, TextSpan>(Left.Span, Right.Span);
+            }
         }
     }
 }

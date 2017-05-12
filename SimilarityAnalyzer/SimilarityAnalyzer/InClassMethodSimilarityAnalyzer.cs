@@ -28,7 +28,7 @@ namespace SimilarityAnalyzer
         public override void Initialize(AnalysisContext context)
         {
             //context.RegisterSyntaxNodeAction(AnalyzeClass, SyntaxKind.ClassDeclaration);
-            context.RegisterSyntaxNodeAction(AnalyzeClassSuperTrees, SyntaxKind.ClassDeclaration);
+            context.RegisterSyntaxNodeAction(AnalyzeClassSubTrees, SyntaxKind.ClassDeclaration);
         }
 
         private void AnalyzeClassSuperTrees(SyntaxNodeAnalysisContext context)

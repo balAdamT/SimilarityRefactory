@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Collections.Concurrent;
 using SimilarityAnalyzer.Data;
+using MoreLinq;
 
 namespace SimilarityAnalyzerManualExecutor
 {
@@ -31,6 +32,9 @@ namespace SimilarityAnalyzerManualExecutor
 
             var projects = solution.Projects.Where(p => p.Name.EndsWith("-4.5"));
 
+            //Write a header
+            Console.WriteLine("id,path,type,runtimeMS,#pairs,matches,longestmatch,startleft,startright,longestmatchnodeifsup");
+
             Parallel.ForEach(projects, project =>
             {
                 var projectName = project.Name;
@@ -42,14 +46,18 @@ namespace SimilarityAnalyzerManualExecutor
                         var subFinder = new CommonSubTreeFinder(@class);
                         var superFinder = new CommonSuperTreeFinder(@class);
                         var id = $"{projectName} {@class.Identifier} {Interlocked.Increment(ref classNumber)}";
-                        var data = subFinder.MatchData;
-                        Console.WriteLine($"{id},{@class.SyntaxTree.FilePath},sub,{data.RunTimeInMs},{data.InnerPairs+data.OuterPairs},{data.Matches},{data.MatchNodeLengths.DefaultIfEmpty(0).Max()}");
-                        data = superFinder.MatchData;
-                        Console.WriteLine($"{id},{@class.SyntaxTree.FilePath},sup,{data.RunTimeInMs},{data.InnerPairs + data.OuterPairs},{data.Matches},{data.MatchNodeLengths.DefaultIfEmpty(0).Max()}");
+                        DataToConsole(id, @class.SyntaxTree.FilePath, "sub", subFinder.MatchData);
+                        DataToConsole(id, @class.SyntaxTree.FilePath, "sup", superFinder.MatchData);
                     }
                 });
             });
             Console.ReadKey();
+        }
+
+        static void DataToConsole(string id, string path, string type, SimilarityData data)
+        {
+            var maxMatchSpanByLength = data.MatchSpans.DefaultIfEmpty(new Tuple<TextSpan,TextSpan>(new TextSpan(), new TextSpan())).MaxBy(s => s.Item1.Length);
+            Console.WriteLine($"{id},{path},{type},{data.RunTimeInMs},{data.InnerPairs + data.OuterPairs},{data.Matches},{maxMatchSpanByLength.Item1.Length},{maxMatchSpanByLength.Item1.Start},{maxMatchSpanByLength.Item2.Start},{data.MatchNodeLengths.DefaultIfEmpty(0).Max()}");
         }
     }
 }

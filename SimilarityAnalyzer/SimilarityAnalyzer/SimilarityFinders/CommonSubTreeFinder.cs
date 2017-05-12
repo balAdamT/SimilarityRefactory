@@ -36,7 +36,7 @@ namespace SimilarityAnalyzer.SimilarityFinders
             {
                 if (pair.Left.IsEquivalentTo(pair.Right))
                 {
-                    similarities.Add(pair);
+                    Similarities.Add(Enumerable.Repeat(pair, 1));
                 }
             }
 
@@ -44,6 +44,7 @@ namespace SimilarityAnalyzer.SimilarityFinders
             MatchData.OuterPairs = outs.Count();
             MatchData.Matches = Similarities.Count();
             MatchData.MatchNodeLengths = Similarities.Select(pair => pair.Count());
+            MatchData.MatchSpans = Similarities.Select(pair => pair.Last().SpainPair);
         }
     }
 }

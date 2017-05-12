@@ -22,17 +22,33 @@ namespace SimilarityAnalyzer.Logic
         {
             //TODO there should be not just methods here
             if (left is MethodDeclarationSyntax || right is MethodDeclarationSyntax)
-                return acc;
+                return FinalizeAnswer(acc);
 
 
-            if (Compare(left, right))
+            //If they are not equal, stop comparision
+            if (!Compare(left, right))
+                return FinalizeAnswer(acc);
+
+            //If it is the same node, it's not a valid similarity
+            if (left.SpanStart == right.SpanStart)
+                return FinalizeAnswer(acc);
+
+            acc.Add(new NodePair(left, right));
+            return FindCommonSuperTree(left.Parent, right.Parent, ref acc);
+        }
+
+        private static IEnumerable<NodePair> FinalizeAnswer(List<NodePair> acc)
+        {
+            while(acc.Count > 0)
             {
-                acc.Add(new NodePair(left, right));
-                return FindCommonSuperTree(left.Parent, right.Parent, ref acc);
+                var last = acc[acc.Count - 1];
+                if (last.Right.IsEquivalentTo(last.Left))
+                    return acc;
+                else
+                    acc.RemoveAt(acc.Count - 1);
             }
-            else
-                return acc;
 
+            return acc;
         }
 
         private static bool Compare(SyntaxNode left, SyntaxNode right)
