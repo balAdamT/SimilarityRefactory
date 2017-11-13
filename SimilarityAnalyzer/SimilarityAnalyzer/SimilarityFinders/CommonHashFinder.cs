@@ -1,31 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SimilarityAnalyzer.Data;
-using Microsoft.CodeAnalysis.CSharp;
-using SimilarityAnalyzer.SimilarityFinders;
+using SimilarityAnalyzer.Descriptor;
 using SimilarityAnalyzer.Logic;
-using Microsoft.CodeAnalysis;
+using System.Linq;
 
 namespace SimilarityAnalyzer.SimilarityFinders
 {
-    public class CommonSuperTreeFinder : Finder
+    public class CommonHashFinder : Finder
     {
-        public CommonSuperTreeFinder(ClassDeclarationSyntax @class) : base(@class)
+        public CommonHashFinder(ClassDeclarationSyntax @class) : base(@class)
         {
         }
 
         protected override void FindSimilarities()
         {
-            var classMap = new Multimap<SyntaxNode, NodePair>();
+            var classMap = new Multimap<SyntaxNodeManager, NodePairManager>();
 
             foreach (MethodDeclarationSyntax method
                 in @class.Members.Where(member => member.Kind() == SyntaxKind.MethodDeclaration))
             {
-                TreeExplorer.ForEachLeaf(method, fragment => classMap.AddFragmentOfMethod(method, fragment));
+                TreeExplorer.ForEachLeaf(method, fragment => classMap.AddFragmentOfMethod(new SyntaxNodeManager(method), new SyntaxNodeManager(fragment)));
             }
 
             var outs = classMap.GetOuterPairs();
@@ -34,9 +29,11 @@ namespace SimilarityAnalyzer.SimilarityFinders
 
             foreach (var pair in pairs)
             {
-                var similarity = SyntaxCompare.FindCommonSuperTree(pair.Left, pair.Right);
-                if (similarity.Any())
-                    Similarities.Add(similarity);
+                if (pair.DescriptionMatches())
+                {
+                    if (pair.EqualPair())
+                    Similarities.Add(Enumerable.Repeat(pair.ToNodePair(), 1));
+                }
             }
 
             MatchData.InnerPairs = ins.Count();

@@ -45,9 +45,11 @@ namespace SimilarityAnalyzerManualExecutor
                     {
                         var subFinder = new CommonSubTreeFinder(@class);
                         var superFinder = new CommonSuperTreeFinder(@class);
+                        var hashFinder = new CommonHashFinder(@class);
                         var id = $"{projectName} {@class.Identifier} {Interlocked.Increment(ref classNumber)}";
                         DataToConsole(id, @class.SyntaxTree.FilePath, "sub", subFinder.MatchData, @class.SyntaxTree);
                         DataToConsole(id, @class.SyntaxTree.FilePath, "sup", superFinder.MatchData, @class.SyntaxTree);
+                        DataToConsole(id, @class.SyntaxTree.FilePath, "hash", hashFinder.MatchData, @class.SyntaxTree);
                     }
                 });
             });

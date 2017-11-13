@@ -37,18 +37,26 @@
     <Compile Include="Data\NodePair.cs" />
     <Compile Include="Data\MethodFragmentMap.cs" />
     <Compile Include="Data\SimilarityData.cs" />
+    <Compile Include="Descriptor\NodePairManager.cs" />
+    <Compile Include="Descriptor\SyntaxCounter.cs" />
+    <Compile Include="Descriptor\SyntaxDescriptor.cs" />
+    <Compile Include="Descriptor\SyntaxNodeManager.cs" />
     <Compile Include="Helpers\EnumerableActions.cs" />
     <Compile Include="Helpers\EnumerablePairHelpers.cs" />
     <Compile Include="Helpers\MaxByExtension.cs" />
     <Compile Include="InClassMethodSimilarityAnalyzer.cs" />
     <Compile Include="Logic\FragmentExplrorer.cs" />
     <Compile Include="Logic\SyntaxCompare.cs" />
+    <Compile Include="Masking\ISyntaxMask.cs" />
+    <Compile Include="Masking\OnlyNodesMask.cs" />
+    <Compile Include="Masking\SyntaxMasks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SimilarityFinders\CommonHashFinder.cs" />
     <Compile Include="SimilarityFinders\CommonSubTreeFinder.cs" />
     <Compile Include="SimilarityFinders\CommonSuperTreeFinder.cs" />
     <Compile Include="SimilarityFinders\Finder.cs" />
@@ -81,19 +89,15 @@
   <ItemGroup>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.Common.1.0.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.CSharp.1.0.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.CSharp.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.CSharp.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.CSharp.Workspaces.1.0.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.CSharp.Workspaces.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis.Workspaces, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.Workspaces.Common.1.0.1\lib\portable-net45+win8\Microsoft.CodeAnalysis.Workspaces.dll</HintPath>
-      <Private>False</Private>
     </Reference>
     <Reference Include="System.Collections.Immutable, Version=1.1.36.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Collections.Immutable.1.1.36\lib\portable-net45+win8+wp8+wpa81\System.Collections.Immutable.dll</HintPath>
@@ -124,7 +128,6 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="AfterBuild">
     <GetAssemblyIdentity AssemblyFiles="$(OutDir)\$(AssemblyName).dll">

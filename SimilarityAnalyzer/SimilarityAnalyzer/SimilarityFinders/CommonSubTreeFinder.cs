@@ -1,4 +1,5 @@
-﻿using Microsoft.CodeAnalysis.CSharp;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using SimilarityAnalyzer.Data;
 using SimilarityAnalyzer.Logic;
@@ -19,7 +20,7 @@ namespace SimilarityAnalyzer.SimilarityFinders
 
         protected override void FindSimilarities()
         {
-            var classMap = new MethodFragmentMap();
+            var classMap = new Multimap<SyntaxNode, NodePair>();
 
             foreach (MethodDeclarationSyntax method
                 in @class.Members.Where(member => member.Kind() == SyntaxKind.MethodDeclaration))
