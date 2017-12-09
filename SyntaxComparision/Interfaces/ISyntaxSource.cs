@@ -7,8 +7,8 @@ using Microsoft.CodeAnalysis;
 
 namespace SyntaxComparision.Interfaces
 {
-  public interface ISyntaxPreprocessor<out TRepresentation> where TRepresentation : ISyntaxRepresentation
+  public interface ISyntaxSource
   {
-    TRepresentation Process(SyntaxNode node);
+    IEnumerable<SyntaxNode> Fetch();
   }
 }

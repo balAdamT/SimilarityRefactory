@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SyntaxComparision.Interfaces
 {
-  interface ISyntaxComparator<TPair, TRepresentation>
+  public interface ISyntaxComparator<in TPair, TRepresentation>
     where TRepresentation : ISyntaxRepresentation
     where TPair : ISyntaxPair<TRepresentation>
   {
-    IEnumerable<TPair> Filter(IEnumerable<TPair> all);
+    bool Equals(TPair pair);
   }
 }

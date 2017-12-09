@@ -33,6 +33,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Data\SyntaxPair.cs" />
+    <Compile Include="Interfaces\ISyntaxPairer.cs" />
+    <Compile Include="Interfaces\ISyntaxComparator.cs" />
+    <Compile Include="Interfaces\ISyntaxPair.cs" />
+    <Compile Include="Interfaces\ISyntaxPreprocessor.cs" />
     <Compile Include="Interfaces\ISyntaxRepresentation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -128,6 +128,16 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SimilarityTreeExplorer\SimilarityTree.csproj">
+      <Project>{8df3be5c-309a-41d2-946c-240d210f191f}</Project>
+      <Name>SimilarityTree</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\SyntaxVector\SyntaxVector.csproj">
+      <Project>{027deacc-69a8-4d75-b8fe-b937ed881516}</Project>
+      <Name>SyntaxVector</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="AfterBuild">
     <GetAssemblyIdentity AssemblyFiles="$(OutDir)\$(AssemblyName).dll">
