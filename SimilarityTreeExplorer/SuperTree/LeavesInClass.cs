@@ -22,10 +22,9 @@ namespace SyntaxComparision.Algorithm
 
     public IEnumerable<SyntaxNode> Fetch()
     {
-      foreach (MethodDeclarationSyntax method
-        in @class.Members.Where(member => member.Kind() == SyntaxKind.MethodDeclaration))
-        foreach (var node in method.DescendantNodes().Where(node => node.ChildNodes().Any() == false))
-          yield return node;
+      return @class.Members.Where(member => member.Kind() == SyntaxKind.MethodDeclaration).
+        SelectMany(method => method.DescendantNodes().
+        Where(node => node.ChildNodes().Any() == false));
     }
   }
 }

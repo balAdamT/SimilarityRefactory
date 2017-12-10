@@ -16,5 +16,10 @@ namespace SimilarityAnalyzer.Helpers
         yield return item;
       }
     }
+
+    public static IEnumerable<T> ForEachNow<T>(this IEnumerable<T> sequence, Action<T> action)
+    {
+      return sequence.ForEach<T>(action).ToList();
+    }
   }
 }
