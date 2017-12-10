@@ -6,12 +6,15 @@ using System.Threading.Tasks;
 
 namespace SimilarityAnalyzer.Helpers
 {
-    public static class IEnumerableExtensions
+  public static class IEnumerableExtensions
+  {
+    public static IEnumerable<T> ForEach<T>(this IEnumerable<T> sequence, Action<T> action)
     {
-        public static void ForEach<T>(this IEnumerable<T> sequence, Action<T> action)
-        {
-            foreach (T item in sequence)
-                action(item);
-        }
+      foreach (T item in sequence)
+      {
+        action(item);
+        yield return item;
+      }
     }
+  }
 }

@@ -35,7 +35,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Data\NodePair.cs" />
-    <Compile Include="Data\MethodFragmentMap.cs" />
+    <Compile Include="Data\Multimap.cs" />
     <Compile Include="Data\SimilarityData.cs" />
     <Compile Include="Descriptor\NodePairManager.cs" />
     <Compile Include="Descriptor\SyntaxCounter.cs" />
@@ -133,10 +133,17 @@
       <Project>{8df3be5c-309a-41d2-946c-240d210f191f}</Project>
       <Name>SimilarityTree</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\SyntaxComparision\SyntaxComparision.csproj">
+      <Project>{B8A557AB-CDA4-4E11-B6BD-B5A86038F417}</Project>
+      <Name>SyntaxComparision</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\SyntaxVector\SyntaxVector.csproj">
       <Project>{027deacc-69a8-4d75-b8fe-b937ed881516}</Project>
       <Name>SyntaxVector</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <Target Name="AfterBuild">

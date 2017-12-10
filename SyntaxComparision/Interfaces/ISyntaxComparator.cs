@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SyntaxComparision.Interfaces
 {
-  public interface ISyntaxComparator<in TPair, TRepresentation>
+  public interface ISyntaxComparator<in TPair, in TRepresentation>
     where TRepresentation : ISyntaxRepresentation
     where TPair : ISyntaxPair<TRepresentation>
   {

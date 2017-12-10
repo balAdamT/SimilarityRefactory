@@ -41,7 +41,7 @@ namespace SimilarityAnalyzer.Data
 
             foreach(var nodes in map.Values)
             {
-                EnumerablePairHelpers.InnerPairs(nodes).ForEach(tuple => nodePairs.Add((Pair)Activator.CreateInstance(typeof(Pair), tuple)));
+                //EnumerablePairHelpers.InnerPairs(nodes).ForEach(tuple => nodePairs.Add((Pair)Activator.CreateInstance(typeof(Pair), tuple)));
             }
 
             return nodePairs;

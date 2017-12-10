@@ -9,6 +9,10 @@ namespace SyntaxComparision.Data
 {
   public class SyntaxPair<TRepresentation> : ISyntaxPair<TRepresentation> where TRepresentation : ISyntaxRepresentation
   {
+    public SyntaxPair()
+    {
+      
+    }
     public TRepresentation Left { get; set; }
 
     public TRepresentation Right { get; set; }
