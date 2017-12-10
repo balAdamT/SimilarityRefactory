@@ -34,32 +34,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Data\NodePair.cs" />
-    <Compile Include="Data\Multimap.cs" />
-    <Compile Include="Data\SimilarityData.cs" />
-    <Compile Include="Descriptor\NodePairManager.cs" />
-    <Compile Include="Descriptor\SyntaxCounter.cs" />
-    <Compile Include="Descriptor\SyntaxDescriptor.cs" />
-    <Compile Include="Descriptor\SyntaxNodeManager.cs" />
-    <Compile Include="Helpers\EnumerableActions.cs" />
-    <Compile Include="Helpers\EnumerablePairHelpers.cs" />
-    <Compile Include="Helpers\MaxByExtension.cs" />
     <Compile Include="InClassMethodSimilarityAnalyzer.cs" />
-    <Compile Include="Logic\FragmentExplrorer.cs" />
-    <Compile Include="Logic\SyntaxCompare.cs" />
-    <Compile Include="Masking\ISyntaxMask.cs" />
-    <Compile Include="Masking\OnlyNodesMask.cs" />
-    <Compile Include="Masking\SyntaxMasks.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SimilarityFinders\CommonHashFinder.cs" />
-    <Compile Include="SimilarityFinders\CommonSubTreeFinder.cs" />
-    <Compile Include="SimilarityFinders\CommonSuperTreeFinder.cs" />
-    <Compile Include="SimilarityFinders\Finder.cs" />
     <Compile Include="_Example\Complex Class.cs" />
     <Compile Include="_Example\SimpleClass.cs" />
   </ItemGroup>

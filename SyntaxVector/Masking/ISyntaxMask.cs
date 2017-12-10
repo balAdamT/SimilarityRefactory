@@ -4,10 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.Text;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace SimilarityAnalyzer
+namespace SyntaxVectors.Masking
 {
     public interface ISyntaxMask
     {

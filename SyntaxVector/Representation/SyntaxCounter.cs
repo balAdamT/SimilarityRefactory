@@ -6,19 +6,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SyntaxVectors.Masking;
 
-namespace SimilarityAnalyzer.Descriptor
+namespace SyntaxVectors.Representation
 {
     public static class SyntaxCounter
     {
-        public static SyntaxDescriptor Calculate(SyntaxNode root, ISyntaxMask mask)
+        public static SyntaxVector Calculate(SyntaxNode root, ISyntaxMask mask)
         {
-            SyntaxDescriptor desc = new SyntaxDescriptor(mask);
+            SyntaxVector desc = new SyntaxVector(mask);
 
-            //TODO: This is safe, IsKind() uses the same logic to comapre it
+            //This is safe, IsKind() uses the same logic to comapre it
             desc.Count((SyntaxKind)root.RawKind);
 
-            //TODO: Consider mutlithreading with iNterlocked
+            //TODO: Consider mutlithreading with Interlocked
             foreach(var node in root.DescendantNodes())
             {
                 desc.Count((SyntaxKind)root.RawKind);

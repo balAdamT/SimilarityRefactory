@@ -7,14 +7,13 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
-using SimilarityAnalyzer.Logic;
-using SimilarityAnalyzer.Data;
-using SimilarityAnalyzer.SimilarityFinders;
 using SimilarityTreeExplorer.SubTree;
 using SimilarityTreeExplorer.SuperTree;
 using SyntaxComparision.Algorithm;
 using SyntaxComparision.Data;
 using SyntaxComparision.Interfaces;
+using SyntaxVectors;
+using SyntaxVectors.Masking;
 
 namespace SimilarityAnalyzer
 {
@@ -32,8 +31,9 @@ namespace SimilarityAnalyzer
 
     public override void Initialize(AnalysisContext context)
     {
-      context.RegisterSyntaxNodeAction(AnalyzeClassSuperTrees, SyntaxKind.ClassDeclaration);
+      //context.RegisterSyntaxNodeAction(AnalyzeClassSuperTrees, SyntaxKind.ClassDeclaration);
       //context.RegisterSyntaxNodeAction(AnalyzeClassSubTrees, SyntaxKind.ClassDeclaration);
+      context.RegisterSyntaxNodeAction(AnalyzeClassVectors, SyntaxKind.ClassDeclaration);
     }
 
     private void AnalyzeClassSuperTrees(SyntaxNodeAnalysisContext context)
@@ -58,6 +58,18 @@ namespace SimilarityAnalyzer
 
 
       var analyzer = new SimilarityFinder<SyntaxPair<NodeAsRepresentation>,NodeAsRepresentation>(source, pre,  Enumerable.Repeat(comparator, 1).ToList());
+      var similarities = analyzer.FindAll();
+    }
+
+    private void AnalyzeClassVectors(SyntaxNodeAnalysisContext context)
+    {
+      var @class = context.Node as ClassDeclarationSyntax;
+
+      var source = new MethodFragmentsInClass(@class);
+      var pre = new NodeToVector(SyntaxMasks.AllNodes);
+      var comparator = (ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector>) new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector>();
+
+      var analyzer = new SimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector> (source, pre, Enumerable.Repeat(comparator, 1).ToList());
       var similarities = analyzer.FindAll();
     }
   }

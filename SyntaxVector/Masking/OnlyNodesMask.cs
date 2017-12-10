@@ -1,7 +1,7 @@
 ﻿using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
-namespace SimilarityAnalyzer.Masking
+namespace SyntaxVectors.Masking
 {
     internal class AllNodesMask : ISyntaxMask
     {

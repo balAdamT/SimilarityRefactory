@@ -4,13 +4,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SyntaxVectors.Masking;
 
-namespace SimilarityAnalyzer
+namespace SyntaxVectors.Representation
 {
-    public class SyntaxDescriptor
+    public class SyntaxVector
     {
         Dictionary<SyntaxKind, int> count = new Dictionary<SyntaxKind, int>();
-        public SyntaxDescriptor(ISyntaxMask mask)
+        public SyntaxVector(ISyntaxMask mask)
         {
             var allKinds = (SyntaxKind[])Enum.GetValues(typeof(SyntaxKind));
             foreach (var kind in allKinds)
@@ -38,7 +39,7 @@ namespace SimilarityAnalyzer
 
         public override bool Equals(object obj)
         {
-            var other = obj as SyntaxDescriptor;
+            var other = obj as SyntaxVector;
 
             if (other == null)
                 return false;
