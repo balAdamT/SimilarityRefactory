@@ -11,6 +11,7 @@ using SimilarityAnalyzer.Logic;
 using SimilarityAnalyzer.Data;
 using SimilarityAnalyzer.SimilarityFinders;
 using SimilarityTreeExplorer.SubTree;
+using SimilarityTreeExplorer.SuperTree;
 using SyntaxComparision.Algorithm;
 using SyntaxComparision.Data;
 using SyntaxComparision.Interfaces;
@@ -31,16 +32,20 @@ namespace SimilarityAnalyzer
 
     public override void Initialize(AnalysisContext context)
     {
-      //context.RegisterSyntaxNodeAction(AnalyzeClass, SyntaxKind.ClassDeclaration);
-      context.RegisterSyntaxNodeAction(AnalyzeClassSubTrees, SyntaxKind.ClassDeclaration);
+      context.RegisterSyntaxNodeAction(AnalyzeClassSuperTrees, SyntaxKind.ClassDeclaration);
+      //context.RegisterSyntaxNodeAction(AnalyzeClassSubTrees, SyntaxKind.ClassDeclaration);
     }
 
     private void AnalyzeClassSuperTrees(SyntaxNodeAnalysisContext context)
     {
       var @class = context.Node as ClassDeclarationSyntax;
 
-      var finder = new CommonSuperTreeFinder(@class);
-      var similarities = finder.Similarities;
+      var source = new LeavesInClass(@class);
+      var pre = new NodeToNode();
+      var comparator = (ISyntaxComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation>)new SuperTreeComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation>();
+
+      var analyzer = new SimilarityFinder<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation>(source, pre, Enumerable.Repeat(comparator, 1).ToList());
+      var similarities = analyzer.FindAll();
     }
 
     private void AnalyzeClassSubTrees(SyntaxNodeAnalysisContext context)
