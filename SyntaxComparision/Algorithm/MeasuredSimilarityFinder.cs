@@ -8,79 +8,79 @@ using SyntaxComparision.Interfaces;
 
 namespace SyntaxComparision.Algorithm
 {
-  public class MeasuredSimilarityFinder<TPair, TRepresentation>
-    where TRepresentation : ISyntaxRepresentation
-    where TPair : ISyntaxPair<TRepresentation>, new()
-  {
-    private readonly ISyntaxSource source;
-    private readonly ISyntaxPreprocessor<TRepresentation> preprocessor;
-    private readonly List<ISyntaxComparator<TPair, TRepresentation>> comparators;
-
-    private SimilarityMeasure measure;
-
-    public SimilarityMeasure Measure => measure;
-
-    public MeasuredSimilarityFinder(ISyntaxSource source, ISyntaxPreprocessor<TRepresentation> preprocessor,
-      List<ISyntaxComparator<TPair, TRepresentation>> comparators)
+    public class MeasuredSimilarityFinder<TPair, TRepresentation>
+      where TRepresentation : ISyntaxRepresentation
+      where TPair : ISyntaxPair<TRepresentation>, new()
     {
-      this.source = source;
-      this.preprocessor = preprocessor;
-      this.comparators = comparators;
+        private readonly ISyntaxSource source;
+        private readonly ISyntaxPreprocessor<TRepresentation> preprocessor;
+        private readonly List<ISyntaxComparator<TPair, TRepresentation>> comparators;
 
-      measure = new SimilarityMeasure();
-    }
+        private SimilarityMeasure measure;
 
-    public IEnumerable<TPair> FindAll()
-    {
-      var nodes = source.Fetch().Select((x, i) =>
-      {
-        measure.Sources = i;
-        return x;
-      });
-      var representations = nodes.Select(node => preprocessor.Process(node));
+        public SimilarityMeasure Measure => measure;
 
-      var pairs = representations.InnerPairs<TPair, TRepresentation>().Select((x, i) =>
-      {
-        measure.Pairs = i;
-        return x;
-      });
-
-      measure.Similarities = Enumerable.Repeat(0, comparators.Count()).ToList();
-      foreach (var element in pairs)
-      {
-        var cIndex = 0;
-        foreach (var comparator in comparators)
+        public MeasuredSimilarityFinder(ISyntaxSource source, ISyntaxPreprocessor<TRepresentation> preprocessor,
+          List<ISyntaxComparator<TPair, TRepresentation>> comparators)
         {
-          if (!comparator.Equals(element))
-            goto SkipThisElement;
+            this.source = source;
+            this.preprocessor = preprocessor;
+            this.comparators = comparators;
 
-          measure.Similarities[cIndex++]++;
+            measure = new SimilarityMeasure();
         }
 
-        yield return element;
-        SkipThisElement:
-        ;
-      }
+        public IEnumerable<TPair> FindAll()
+        {
+            var nodes = source.Fetch().Select((x, i) =>
+            {
+                measure.Sources = i;
+                return x;
+            });
+            var representations = nodes.Select(node => preprocessor.Process(node));
 
+            var pairs = representations.InnerPairs<TPair, TRepresentation>().Select((x, i) =>
+            {
+                measure.Pairs = i;
+                return x;
+            });
+
+            measure.Similarities = Enumerable.Repeat(0, comparators.Count()).ToList();
+            foreach (var element in pairs)
+            {
+                var cIndex = 0;
+                foreach (var comparator in comparators)
+                {
+                    if (!comparator.Equals(element))
+                        goto SkipThisElement;
+
+                    measure.Similarities[cIndex++]++;
+                }
+
+                yield return element;
+                SkipThisElement:
+                ;
+            }
+
+        }
     }
-  }
 
-  public struct SimilarityMeasure
-  {
-    public int Sources;
-    public int Pairs;
-    public List<int> Similarities;
-
-    public override string ToString()
+    public struct SimilarityMeasure
     {
-      var sb = new StringBuilder();
-      sb.Append(Sources);
-      sb.Append('>');
-      sb.Append(Pairs);
+        public int Sources;
+        public int Pairs;
+        public List<int> Similarities;
 
-      Similarities.ForEachNow(s => sb.Append($">{s}"));
+        public override string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.Append(Sources);
+            sb.Append('>');
+            sb.Append(Pairs);
 
-      return sb.ToString();
+            Similarities.ForEachNow(s => sb.Append($">{s}"));
+
+            return sb.ToString();
+        }
     }
-  }
 }

@@ -15,7 +15,7 @@ namespace SimilarityAnalyzer.Helpers
     {
       return from item1 in list
              from item2 in list
-             where item1.GetHashCode() < item2.GetHashCode()
+             where item1.Node.GetHashCode() < item2.Node.GetHashCode()
              select (TPair)Activator.CreateInstance(typeof(TPair), item1, item2);
     }
 

@@ -21,14 +21,17 @@ using SyntaxVectors.Masking;
 
 namespace SimilarityAnalyzerManualExecutor
 {
-  class Program
-  {
-    static void Main(string[] args)
+    class Program
     {
-      var path = @"C:\Git Repos\NUnit\nunit\nunit.sln";
+        static void Main(string[] args)
+        {
+            var path = @"C:\Git Repos\NUnit\nunit\nunit.sln";
+            //var pathToPorject = @"C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite-runner\nunitlite-runner-4.5.csproj";
+            var pathToPorject = @"C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\nunitlite-4.5.csproj";
 
-      var exec = new Executor();
-      exec.Execute(path);
+            var exec = new Executor(true);
+            //exec.Execute(path);
+            exec.ExecuteForProject(pathToPorject);
+        }
     }
-  }
 }

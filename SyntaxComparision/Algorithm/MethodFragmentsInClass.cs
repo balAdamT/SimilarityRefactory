@@ -24,7 +24,7 @@ namespace SyntaxComparision.Algorithm
     {
       foreach (MethodDeclarationSyntax method
         in @class.Members.Where(member => member.Kind() == SyntaxKind.MethodDeclaration))
-        foreach (var node in method.DescendantNodes())
+        foreach (var node in method.DescendantNodes().Where(node => node.DescendantNodes().Any()))
           yield return node;
     }
   }
