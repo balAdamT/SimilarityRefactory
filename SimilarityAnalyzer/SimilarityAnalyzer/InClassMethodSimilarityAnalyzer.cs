@@ -20,10 +20,10 @@ namespace SimilarityAnalyzer
   [DiagnosticAnalyzer(LanguageNames.CSharp)]
   public class InClassMethodSimilarityAnalyzer : DiagnosticAnalyzer
   {
-    public const string DiagnosticId = "InClassMethodSimilarityAnalyzer";
-    internal static readonly LocalizableString Title = "InClassMethodSimilarityAnalyzer Title";
-    internal static readonly LocalizableString MessageFormat = "InClassMethodSimilarityAnalyzer '{0}'";
-    internal const string Category = "InClassMethodSimilarityAnalyzer Category";
+    public const string DiagnosticId = "InClassSimilarity";
+    internal static readonly LocalizableString Title = "Code may be unnecessary duplicate.";
+    internal static readonly LocalizableString MessageFormat = "This code can be found on '{0}'";
+    internal const string Category = "DuplicatedCode";
 
     internal static DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Warning, true);
 
@@ -31,8 +31,8 @@ namespace SimilarityAnalyzer
 
     public override void Initialize(AnalysisContext context)
     {
-      context.RegisterSyntaxNodeAction(AnalyzeClassSuperTrees, SyntaxKind.ClassDeclaration);
-      //context.RegisterSyntaxNodeAction(AnalyzeClassSubTrees, SyntaxKind.ClassDeclaration);
+      //context.RegisterSyntaxNodeAction(AnalyzeClassSuperTrees, SyntaxKind.ClassDeclaration);
+      context.RegisterSyntaxNodeAction(AnalyzeClassSubTrees, SyntaxKind.ClassDeclaration);
       //context.RegisterSyntaxNodeAction(AnalyzeClassVectors, SyntaxKind.ClassDeclaration);
     }
 
@@ -59,6 +59,11 @@ namespace SimilarityAnalyzer
 
       var analyzer = new SimilarityFinder<SyntaxPair<NodeAsRepresentation>,NodeAsRepresentation>(source, pre,  Enumerable.Repeat(comparator, 1).ToList());
       var similarities = analyzer.FindAll();
+
+      var similarity = similarities.OrderByDescending(s => s.Left.Node.DescendantNodes().Count()).Take(1).Single();
+
+      context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Left.Node.GetLocation(), similarity.Right.Node.GetLocation().GetLineSpan()));
+      context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Right.Node.GetLocation(), similarity.Left.Node.GetLocation().GetLineSpan()));
     }
 
     private void AnalyzeClassVectors(SyntaxNodeAnalysisContext context)
