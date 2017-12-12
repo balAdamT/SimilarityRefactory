@@ -23,10 +23,10 @@ namespace SimilarityAnalyzerManualExecutor
 
     NodeToNode identity = new NodeToNode();
     NodeToVector withVector = new NodeToVector(SyntaxMasks.AllNodes);
-    ISyntaxComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation> superComparator = (ISyntaxComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation>)new SuperTreeComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation>();
-    ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation> subComparator = (ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation>)new SemanticComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation>();
-    ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector> subComparatorWithVector = (ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector>)new SemanticComparator<SyntaxPair<NodeWithVector>, NodeWithVector>();
-    ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector> vectorComparator = (ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector>)new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector>();
+    ISyntaxComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation> superComparator = new SuperTreeComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation>();
+    ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation> subComparator = new SemanticComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation>();
+    ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector> subComparatorWithVector = new SemanticComparator<SyntaxPair<NodeWithVector>, NodeWithVector>();
+    ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector> vectorComparator = new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector>();
 
     public Executor(bool list)
     {
@@ -77,7 +77,7 @@ namespace SimilarityAnalyzerManualExecutor
 
     private SimilarityMeasure Config3(Compilation compilation)
     {
-      var source = new MethodFragmentsInCompilation(compilation, 8);
+      var source = new MethodFragmentsInCompilation(compilation: compilation, minDepth: 8);
       var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector>(source, withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector>>() { vectorComparator, subComparatorWithVector });
       var similarities = analyzer.FindAll().ToList();
 

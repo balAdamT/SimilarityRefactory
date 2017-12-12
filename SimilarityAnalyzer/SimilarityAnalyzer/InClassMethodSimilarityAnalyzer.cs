@@ -32,7 +32,8 @@ namespace SimilarityAnalyzer
     public override void Initialize(AnalysisContext context)
     {
       //context.RegisterSyntaxNodeAction(AnalyzeClassSuperTrees, SyntaxKind.ClassDeclaration);
-      context.RegisterSyntaxNodeAction(AnalyzeClassSubTrees, SyntaxKind.ClassDeclaration);
+      //context.RegisterSyntaxNodeAction(AnalyzeClassSubTrees, SyntaxKind.ClassDeclaration);
+      context.RegisterSyntaxNodeAction(AnalyzeClassSubTreesWithDataflow, SyntaxKind.ClassDeclaration);
       //context.RegisterSyntaxNodeAction(AnalyzeClassVectors, SyntaxKind.ClassDeclaration);
     }
 
@@ -61,6 +62,26 @@ namespace SimilarityAnalyzer
       var similarities = analyzer.FindAll();
 
       var similarity = similarities.OrderByDescending(s => s.Left.Node.DescendantNodes().Count()).Take(1).Single();
+
+      context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Left.Node.GetLocation(), similarity.Right.Node.GetLocation().GetLineSpan()));
+      context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Right.Node.GetLocation(), similarity.Left.Node.GetLocation().GetLineSpan()));
+    }
+
+    private void AnalyzeClassSubTreesWithDataflow(SyntaxNodeAnalysisContext context)
+    {
+      var @class = context.Node as ClassDeclarationSyntax;
+
+      var source = new MethodFragmentsInClass(@class);
+      var pre = new NodeToNode();
+      var comparator = (ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation>)new SemanticComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation>();
+      var dfComparator = (ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation>)new DataflowComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation>();
+
+
+      var analyzer = new SimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation>(source, pre, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation>>() {comparator, dfComparator});
+      var similarities = analyzer.FindAll();
+
+      similarities = similarities.OrderByDescending(s => s.Left.Node.DescendantNodes().Count());
+      var similarity = similarities.First();
 
       context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Left.Node.GetLocation(), similarity.Right.Node.GetLocation().GetLineSpan()));
       context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Right.Node.GetLocation(), similarity.Left.Node.GetLocation().GetLineSpan()));
