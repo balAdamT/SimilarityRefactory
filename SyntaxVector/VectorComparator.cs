@@ -7,11 +7,12 @@ using SyntaxComparision.Interfaces;
 
 namespace SyntaxVectors
 {
-  public class VectorComparator<TPair, TRepresentation> : ISyntaxComparator<TPair, TRepresentation>
+  public class VectorComparator<TPair, TRepresentation, TInformation> : ISyntaxComparator<TPair, TRepresentation, TInformation>
     where TRepresentation : NodeWithVector
     where TPair : ISyntaxPair<TRepresentation>
+    where TInformation : ISyntaxInformation
   {
-    public bool Equals(TPair pair)
+    public bool SyntaxEquals(TPair pair, TInformation information)
     {
       return pair.Left.Vector.Equals(pair.Right.Vector);
     }

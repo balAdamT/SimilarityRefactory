@@ -25,13 +25,31 @@ namespace SimilarityAnalyzerManualExecutor
     {
         static void Main(string[] args)
         {
+            //TestNUnit();
+            TestLocal();
+
+        }
+
+        private static void TestNUnit()
+        {
             var path = @"C:\Git Repos\NUnit\nunit\nunit.sln";
             //var pathToPorject = @"C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite-runner\nunitlite-runner-4.5.csproj";
             var pathToPorject = @"C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\nunitlite-4.5.csproj";
 
             var exec = new Executor(true);
             //exec.Execute(path);
-            exec.ExecuteForProject(pathToPorject);
+            exec.ExecuteForProject(pathToPorject, null);
+        }
+
+        private static void TestLocal()
+        {
+            var path = @"C:\Git Repos\Roslyn\SimilarityRefactory\SimilarityAnalyzer.sln";
+            //var pathToPorject = @"C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite-runner\nunitlite-runner-4.5.csproj";
+            var pathToPorject = @"C:\Git Repos\Roslyn\SimilarityRefactory\SimilarityExample\SimilarityExample.csproj";
+
+            var exec = new Executor(true);
+            //exec.Execute(path);
+            exec.ExecuteForProject(pathToPorject, new HashSet<string> {"sub+df", "sub+df+seman" });
         }
     }
 }

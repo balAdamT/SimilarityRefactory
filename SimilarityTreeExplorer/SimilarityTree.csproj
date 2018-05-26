@@ -43,6 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SubTree\DataflowComparator.cs" />
     <Compile Include="SubTree\SemanticComparator.cs" />
+    <Compile Include="SubTree\StructuralComparator.cs" />
     <Compile Include="SuperTree\LeavesInClass.cs" />
     <Compile Include="SuperTree\LeavesInCompilation.cs" />
     <Compile Include="SuperTree\SuperTreeComparator.cs" />

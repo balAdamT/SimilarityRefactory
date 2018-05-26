@@ -8,24 +8,26 @@ using SyntaxComparision.Interfaces;
 
 namespace SyntaxComparision.Algorithm
 {
-    public class MeasuredSimilarityFinder<TPair, TRepresentation>
-      where TRepresentation : ISyntaxRepresentation
-      where TPair : ISyntaxPair<TRepresentation>, new()
+    public class MeasuredSimilarityFinder<TPair, TRepresentation, TInformation>
+        where TRepresentation : ISyntaxRepresentation
+        where TPair : ISyntaxPair<TRepresentation>, new()
+        where TInformation : ISyntaxInformation
     {
         private readonly ISyntaxSource source;
         private readonly ISyntaxPreprocessor<TRepresentation> preprocessor;
-        private readonly List<ISyntaxComparator<TPair, TRepresentation>> comparators;
+        private readonly List<ISyntaxComparator<TPair, TRepresentation, TInformation>> comparators;
+        private readonly TInformation information;
 
         private SimilarityMeasure measure;
-
         public SimilarityMeasure Measure => measure;
 
         public MeasuredSimilarityFinder(ISyntaxSource source, ISyntaxPreprocessor<TRepresentation> preprocessor,
-          List<ISyntaxComparator<TPair, TRepresentation>> comparators)
+          List<ISyntaxComparator<TPair, TRepresentation, TInformation>> comparators, TInformation information)
         {
             this.source = source;
             this.preprocessor = preprocessor;
             this.comparators = comparators;
+            this.information = information;
 
             measure = new SimilarityMeasure();
         }
@@ -51,7 +53,7 @@ namespace SyntaxComparision.Algorithm
                 var cIndex = 0;
                 foreach (var comparator in comparators)
                 {
-                    if (!comparator.Equals(element))
+                    if (!comparator.SyntaxEquals(element, information))
                         goto SkipThisElement;
 
                     measure.Similarities[cIndex++]++;

@@ -36,6 +36,7 @@
     <Compile Include="Algorithm\MeasuredSimilarityFinder.cs" />
     <Compile Include="Algorithm\MethodFragmentsInCompilation.cs" />
     <Compile Include="Algorithm\NodeToNode.cs" />
+    <Compile Include="Algorithm\NodeToNodeWithSemantic.cs" />
     <Compile Include="Data\NodeAsRepresentation.cs" />
     <Compile Include="Helpers\TreeExplrorer.cs" />
     <Compile Include="Algorithm\MethodFragmentsInClass.cs" />
@@ -43,7 +44,10 @@
     <Compile Include="Data\SyntaxPair.cs" />
     <Compile Include="Helpers\EnumerableActions.cs" />
     <Compile Include="Helpers\EnumerableExtensions.cs" />
+    <Compile Include="Information\OncePerTreeInformation.cs" />
+    <Compile Include="Information\SingleTreeInformation.cs" />
     <Compile Include="Interfaces\ISyntaxComparator.cs" />
+    <Compile Include="Interfaces\ISyntaxInformation.cs" />
     <Compile Include="Interfaces\ISyntaxPair.cs" />
     <Compile Include="Interfaces\ISyntaxPreprocessor.cs" />
     <Compile Include="Interfaces\ISyntaxRepresentation.cs" />

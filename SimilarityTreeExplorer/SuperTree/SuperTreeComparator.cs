@@ -8,16 +8,17 @@ using SyntaxComparision.Interfaces;
 
 namespace SimilarityTreeExplorer.SuperTree
 {
-  public class SuperTreeComparator<TPair, TRepresentation> : ISyntaxComparator<TPair, TRepresentation>
-    where TRepresentation : ISyntaxRepresentation
-    where TPair : SyntaxLeafPair<TRepresentation>
-  {
-    public bool Equals(TPair pair)
+    public class SuperTreeComparator<TPair, TRepresentation, TInformation> : ISyntaxComparator<TPair, TRepresentation, TInformation>
+      where TRepresentation : ISyntaxRepresentation
+      where TPair : SyntaxLeafPair<TRepresentation>
+      where TInformation : ISyntaxInformation
     {
-      var height = SyntaxCompare.FindCommonSuperTree(pair.Left.Node, pair.Right.Node);
-      pair.EquivalenceHeight = height;
+        public bool SyntaxEquals(TPair pair, TInformation information)
+        {
+            var height = SyntaxCompare.FindCommonSuperTree(pair.Left.Node, pair.Right.Node);
+            pair.EquivalenceHeight = height;
 
-      return height > 0;
-    } 
-  }
+            return height > 0;
+        }
+    }
 }

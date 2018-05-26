@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis;
 using SyntaxComparision.Interfaces;
 
 namespace SimilarityAnalyzer.Helpers
@@ -28,15 +29,16 @@ namespace SimilarityAnalyzer.Helpers
              select (TPair)Activator.CreateInstance(typeof(TPair), item1, item2);
     }
 
-    public static IEnumerable<TPair> Where<TPair, TRepresentation>(this IEnumerable<TPair> source, ICollection<ISyntaxComparator<TPair, TRepresentation>> comparators)
+    public static IEnumerable<TPair> Where<TPair, TRepresentation, TInformation>(this IEnumerable<TPair> source, ICollection<ISyntaxComparator<TPair, TRepresentation, TInformation>> comparators, TInformation information)
       where TRepresentation : ISyntaxRepresentation
       where TPair : ISyntaxPair<TRepresentation>, new()
+      where TInformation : ISyntaxInformation
     {
       foreach(var element in source)
       {
         foreach (var comparator in comparators)
         {
-          if (!comparator.Equals(element))
+          if (!comparator.SyntaxEquals(element, information))
             goto SkipThisElement;
         }
 
