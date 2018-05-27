@@ -30,6 +30,7 @@ namespace SimilarityAnalyzerManualExecutor
         ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> vectorComparator = new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
         ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> dfComparataor = new DataflowComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
         ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> semanticComparator = new SemanticComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> compatibleComparator = new CompatibleComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
 
 
 
@@ -103,11 +104,31 @@ namespace SimilarityAnalyzerManualExecutor
                 var m4 = Config5(compilation);
                 Log(projectName, key, m4);
             }
+
+            key = "sub+com";
+            if (enabled == null || enabled.Contains(key))
+            {
+                var m4 = Config6(compilation);
+                Log(projectName, key, m4);
+            }
         }
 
         private void Log(string projectName, string configName, SimilarityMeasure measure)
         {
             Console.WriteLine($@"{projectName}:{configName.ToUpper()}:{measure}");
+        }
+
+        private SimilarityMeasure Config6(Compilation compilation)
+        {
+            var source = new MethodFragmentsInCompilation(compilation, 8);
+            var information = new OncePerTreeInformation(compilation);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>>() { subComparator, compatibleComparator }, information);
+            var similarities = analyzer.FindAll().ToList();
+
+            if (list)
+                ListSimilarities(similarities);
+
+            return analyzer.Measure;
         }
 
         private SimilarityMeasure Config5(Compilation compilation)

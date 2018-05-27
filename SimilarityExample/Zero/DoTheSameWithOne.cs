@@ -16,3 +16,4 @@ namespace SimilarityExample.Zero
             a.Decrease();
         }
     }
+}
