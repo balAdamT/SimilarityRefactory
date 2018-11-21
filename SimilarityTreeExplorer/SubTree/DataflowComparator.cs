@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -22,17 +19,39 @@ namespace SimilarityTreeExplorer.SubTree
 
         private bool Equals(SyntaxNode left, SyntaxNode right, Dictionary<string, string> variables)
         {
+            if (left.Kind() != right.Kind())
+                return false;
+
+            if (left.Kind() == SyntaxKind.VariableDeclarator)
+            {
+                if (VariableEquals((VariableDeclaratorSyntax)left, (VariableDeclaratorSyntax)right, variables))
+                     return ChildrenEquals(left.ChildNodes(), right.ChildNodes(), variables);
+            }
+
             if (left.Kind() != SyntaxKind.IdentifierName)
                 return ChildrenEquals(left.ChildNodes(), right.ChildNodes(), variables);
-
-            if (right.Kind() != SyntaxKind.IdentifierName)
-                return false;
 
             //This WILL update dictionary for ALL recursion paths but that is okay - dictionary must be globally integral
             if (IdentifierEquals((IdentifierNameSyntax)left, (IdentifierNameSyntax)right, variables))
                 return ChildrenEquals(left.ChildNodes(), right.ChildNodes(), variables);
 
             return false;
+        }
+
+        private bool VariableEquals(VariableDeclaratorSyntax left, VariableDeclaratorSyntax right, Dictionary<string, string> variables)
+        {
+            var leftTruth = left.Identifier.Text;
+            var rightTruth = right.Identifier.Text;
+
+            variables.TryGetValue(leftTruth, out var rightGuess);
+
+            //We have seen this before, so it must have a partner
+            if (rightGuess != null)
+                return rightTruth == rightGuess;
+
+            //First occurence of these variables, we can accept it
+            variables[leftTruth] = rightTruth;
+            return true;
         }
 
         private bool IdentifierEquals(IdentifierNameSyntax left, IdentifierNameSyntax right, Dictionary<string, string> variables)

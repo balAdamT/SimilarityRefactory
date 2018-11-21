@@ -187,7 +187,6 @@ namespace SimilarityAnalyzerManualExecutor
         private SimilarityMeasure Config1(Compilation compilation)
         {
             var source = new MethodFragmentsInCompilation(compilation, 8);
-            //TODO in this case we don't know the semantic model...
             var information = new OncePerTreeInformation(compilation);
             var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, Enumerable.Repeat(subComparator, 1).ToList(), information);
             var similarities = analyzer.FindAll().ToList();

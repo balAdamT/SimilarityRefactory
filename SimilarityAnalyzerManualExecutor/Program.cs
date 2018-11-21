@@ -25,8 +25,8 @@ namespace SimilarityAnalyzerManualExecutor
     {
         static void Main(string[] args)
         {
-            TestNUnit();
-            //TestLocal();
+            //TestNUnit();
+            TestLocal();
 
         }
 
@@ -49,7 +49,7 @@ namespace SimilarityAnalyzerManualExecutor
 
             var exec = new Executor(true);
             //exec.Execute(path);
-            exec.ExecuteForProject(pathToPorject, new HashSet<string> {"sub+df", "sub+df+seman", "sub+com" });
+            exec.ExecuteForProject(pathToPorject, new HashSet<string> {"sub", "sub+df", "sub+df+seman", "sub+com" });
         }
     }
 }

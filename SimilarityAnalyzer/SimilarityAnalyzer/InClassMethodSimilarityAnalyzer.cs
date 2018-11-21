@@ -65,8 +65,8 @@ namespace SimilarityAnalyzer
 
             var similarity = similarities.OrderByDescending(s => s.Left.Node.DescendantNodes().Count()).Take(1).Single();
 
-            context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Left.Node.GetLocation(), similarity.Right.Node.GetLocation().GetLineSpan()));
-            context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Right.Node.GetLocation(), similarity.Left.Node.GetLocation().GetLineSpan()));
+
+            Report(context, similarity.Left.Node, similarity.Right.Node);
         }
 
         private void AnalyzeClassSubTreesWithDataflow(SyntaxNodeAnalysisContext context)
@@ -84,10 +84,8 @@ namespace SimilarityAnalyzer
 
             similarities = similarities.OrderByDescending(s => s.Left.Node.DescendantNodes().Count());
             var similarity = similarities.First();
-            DiagnosticDataStore.Instance.Store(DiagnosticId, similarity);
 
-            context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Left.Node.GetLocation(), similarity.Right.Node.GetLocation().GetLineSpan()));
-            context.ReportDiagnostic(Diagnostic.Create(Rule, similarity.Right.Node.GetLocation(), similarity.Left.Node.GetLocation().GetLineSpan()));
+            Report(context, similarity.Left.Node, similarity.Right.Node);
         }
 
         private void AnalyzeClassVectors(SyntaxNodeAnalysisContext context)
@@ -101,6 +99,12 @@ namespace SimilarityAnalyzer
 
             var analyzer = new SimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation>(source, pre, Enumerable.Repeat(comparator, 1).ToList(), information);
             var similarities = analyzer.FindAll();
+        }
+
+        private void Report(SyntaxNodeAnalysisContext context, SyntaxNode left, SyntaxNode right)
+        {
+            context.ReportDiagnostic(Diagnostic.Create(Rule, left.GetLocation(), new[] { right.GetLocation() }, right.GetLocation().GetLineSpan()));
+            //context.ReportDiagnostic(Diagnostic.Create(Rule, right.GetLocation(), left.GetLocation().GetLineSpan()));
         }
     }
 }

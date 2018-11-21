@@ -47,8 +47,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Two\A.cs" />
+    <Compile Include="Zero\DoSomethingElseReverted.cs" />
     <Compile Include="Zero\DoStuff.cs" />
     <Compile Include="Zero\DoTheSameWithOne.cs" />
+    <Compile Include="Zero\DoSomethingElse.cs" />
     <Compile Include="Zero\DoThingWithOne.cs" />
     <Compile Include="Zero\DoThingWithTwo.cs" />
   </ItemGroup>
