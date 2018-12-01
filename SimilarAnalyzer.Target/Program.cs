@@ -23,7 +23,7 @@
             int x = c1.C.Value;
             var y = c2.C.C;
             var d = c2?.C?.C;
-            var e = c2.C.C;
+            var e = c2.GetOtherClass().C;
             var f = c2.C.C;
         }
 
@@ -32,7 +32,7 @@
             int x = c1.C.Value;
             var y = c2.C.C;
             var d = c2?.C?.C;
-            var e = c2.C.C;
+            var e = c2.GetClass().C;
             var f = c2.C.C;
         }
     }

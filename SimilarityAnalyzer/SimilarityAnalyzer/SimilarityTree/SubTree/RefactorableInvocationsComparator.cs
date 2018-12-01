@@ -14,8 +14,8 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
     {
         public bool SyntaxEquals(TPair pair, TInformation information)
         {
-            SemanticModel leftModel = information.Provide(pair.Left.Node.SyntaxTree);
-            SemanticModel rightModel = information.Provide(pair.Right.Node.SyntaxTree);
+            var leftModel = information.Provide(pair.Left.Node.SyntaxTree);
+            var rightModel = information.Provide(pair.Right.Node.SyntaxTree);
 
             return Equals(pair.Left.Node, pair.Right.Node, leftModel, rightModel);
         }
@@ -26,54 +26,28 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
             SemanticModel leftModel,
             SemanticModel rightModel)
         {
-            if (left.Kind() == SyntaxKind.ElementAccessExpression 
-                || left.Kind() == SyntaxKind.SimpleMemberAccessExpression 
-                || left.Kind() == SyntaxKind.ConditionalAccessExpression 
-                || left.Kind() == SyntaxKind.InvocationExpression)
+            if (left.Kind() == SyntaxKind.IdentifierName)
             {
                 if (left.Kind() != right.Kind())
                     return false;
-                else return AccessIsRefactorable(left, right, leftModel, rightModel);
+
+                var leftIdentifier = left as IdentifierNameSyntax;
+                var rightIdentifier = right as IdentifierNameSyntax;
+
+
+                return MethodNameIsSame(leftIdentifier, rightIdentifier, leftModel, rightModel);
             }
 
-            if (left.Kind() != SyntaxKind.IdentifierName || left.Kind() != SyntaxKind.ElementAccessExpression)
-                return ChildrenEquals(left.ChildNodes(), right.ChildNodes(), leftModel, rightModel);
-
-            if (right.Kind() != SyntaxKind.IdentifierName)
+            if (right.Kind() == SyntaxKind.IdentifierName)
                 return false;
 
-            if (MethodNameIsSame((IdentifierNameSyntax)left, (IdentifierNameSyntax)right, leftModel, rightModel))
-                return ChildrenEquals(left.ChildNodes(), right.ChildNodes(), leftModel, rightModel);
-
-            return false;
+            return ChildrenEquals(left.ChildNodes(), right.ChildNodes(), leftModel, rightModel);
         }
 
-        private bool AccessIsRefactorable(SyntaxNode left, SyntaxNode right, SemanticModel leftModel, SemanticModel rightModel)
-        {
-            var leftIdentifiers = GetMemberIdentifiers(left);
-            var rightIdentifiers = GetMemberIdentifiers(right);
-
-            var identifierPairs = leftIdentifiers.Zip(rightIdentifiers, (x, y) => new { Left = x, Right = y });
-
-            // First identifier can be unified
-            foreach (var pair in identifierPairs.Skip(1))
-            {
-                if (pair.Left.Identifier.Value != pair.Left.Identifier.Value)
-                    return false;
-            }
-
-            return true;
-        }
-
-        private IEnumerable<IdentifierNameSyntax> GetMemberIdentifiers(SyntaxNode node)
-        {
-            return node.DescendantNodes().OfType<IdentifierNameSyntax>().Where(n => n.FirstAncestorOrSelf<ArgumentListSyntax>() == null);
-        }
-      
         private bool MethodNameIsSame(IdentifierNameSyntax left, IdentifierNameSyntax right, SemanticModel leftModel, SemanticModel rightModel)
         {
-            ISymbol leftSymbol = leftModel.GetSymbolInfo(left).Symbol;
-            ISymbol rightSymbol = rightModel.GetSymbolInfo(right).Symbol;
+            var leftSymbol = leftModel.GetSymbolInfo(left).Symbol;
+            var rightSymbol = rightModel.GetSymbolInfo(right).Symbol;
 
             if (leftSymbol is IMethodSymbol)
             {

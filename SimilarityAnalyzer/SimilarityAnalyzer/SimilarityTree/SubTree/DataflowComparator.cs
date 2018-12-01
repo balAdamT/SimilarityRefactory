@@ -40,10 +40,10 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
 
         private bool VariableEquals(VariableDeclaratorSyntax left, VariableDeclaratorSyntax right, Dictionary<string, string> variables)
         {
-            string leftTruth = left.Identifier.Text;
-            string rightTruth = right.Identifier.Text;
+            var leftTruth = left.Identifier.Text;
+            var rightTruth = right.Identifier.Text;
 
-            variables.TryGetValue(leftTruth, out string rightGuess);
+            variables.TryGetValue(leftTruth, out var rightGuess);
 
             //We have seen this before, so it must have a partner
             if (rightGuess != null)
@@ -56,10 +56,10 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
 
         private bool IdentifierEquals(IdentifierNameSyntax left, IdentifierNameSyntax right, Dictionary<string, string> variables)
         {
-            string leftTruth = left.Identifier.Text;
-            string rightTruth = right.Identifier.Text;
+            var leftTruth = left.Identifier.Text;
+            var rightTruth = right.Identifier.Text;
 
-            variables.TryGetValue(leftTruth, out string rightGuess);
+            variables.TryGetValue(leftTruth, out var rightGuess);
 
             //We have seen this before, so it must have a partner
             if (rightGuess != null)

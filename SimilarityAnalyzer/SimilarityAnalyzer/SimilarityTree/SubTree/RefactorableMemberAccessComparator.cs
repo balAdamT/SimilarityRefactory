@@ -36,8 +36,8 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
 
         private bool AccessIsRefactorable(SyntaxNode left, SyntaxNode right)
         {
-            IEnumerable<IdentifierNameSyntax> leftIdentifiers = GetMemberIdentifiers(left);
-            IEnumerable<IdentifierNameSyntax> rightIdentifiers = GetMemberIdentifiers(right);
+            var leftIdentifiers = GetMemberIdentifiers(left);
+            var rightIdentifiers = GetMemberIdentifiers(right);
 
             var identifierPairs = leftIdentifiers.Zip(rightIdentifiers, (x, y) => new { Left = x, Right = y });
 
@@ -53,8 +53,7 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
 
         private IEnumerable<IdentifierNameSyntax> GetMemberIdentifiers(SyntaxNode node)
         {
-            // TODO fix comment
-            return node.DescendantNodes().OfType<IdentifierNameSyntax>();//.Where(n => n.FirstAncestorOrSelf<ArgumentListSyntax>() == null);
+            return node.DescendantNodes().OfType<IdentifierNameSyntax>().Where(n => n.FirstAncestorOrSelf<ArgumentListSyntax>() == null);
         }
 
         private bool ChildrenEquals(IEnumerable<SyntaxNode> leftChildren, IEnumerable<SyntaxNode> rightChildren)

@@ -14,8 +14,8 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
     {
         public bool SyntaxEquals(TPair pair, TInformation information)
         {
-            SemanticModel leftModel = information.Provide(pair.Left.Node.SyntaxTree);
-            SemanticModel rightModel = information.Provide(pair.Right.Node.SyntaxTree);
+            var leftModel = information.Provide(pair.Left.Node.SyntaxTree);
+            var rightModel = information.Provide(pair.Right.Node.SyntaxTree);
 
             return Compatible(pair.Left.Node, pair.Right.Node, leftModel, rightModel, new Dictionary<string, ITypeSymbol>());
         }
@@ -37,8 +37,8 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
 
         private bool TypeCompatible(IdentifierNameSyntax left, IdentifierNameSyntax right, SemanticModel leftModel, SemanticModel rightModel, Dictionary<string, ITypeSymbol> compatibility)
         {
-            ITypeSymbol leftType = leftModel.GetTypeInfo(left).Type;
-            ITypeSymbol rightType = rightModel.GetTypeInfo(right).Type;
+            var leftType = leftModel.GetTypeInfo(left).Type;
+            var rightType = rightModel.GetTypeInfo(right).Type;
 
             if (leftType == null)
                 return true; //Not a variable
@@ -47,8 +47,8 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
                 return false; //Different types of identifiers
 
             //Both are variables, check if they have a common base
-            List<ITypeSymbol> leftTypes = new List<ITypeSymbol>();
-            ITypeSymbol current = leftType;
+            var leftTypes = new List<ITypeSymbol>();
+            var current = leftType;
             while (current != null && current.Name != "Object")
             {
                 leftTypes.Add(current);
@@ -58,7 +58,7 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
             current = rightType;
             while (current != null && current.Name != "Object")
             {
-                foreach (ITypeSymbol candidate in leftTypes)
+                foreach (var candidate in leftTypes)
                 {
                     if (current == candidate)
                     {

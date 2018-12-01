@@ -12,8 +12,6 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
     {
         public bool SyntaxEquals(TPair pair, TInformation information)
         {
-            //return pair.Left.Node.IsEquivalentTo(pair.Right.Node);
-
             return Compare(pair.Left.Node, pair.Right.Node);
         }
 
@@ -22,8 +20,8 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
             if (node1.Kind() != node2.Kind())
                 return false;
 
-            System.Collections.Generic.IEnumerable<SyntaxNode> leftChildren = node1.ChildNodes();
-            System.Collections.Generic.IEnumerable<SyntaxNode> rightChildren = node2.ChildNodes();
+            var leftChildren = node1.ChildNodes();
+            var rightChildren = node2.ChildNodes();
 
             var parallelEnumerator = leftChildren.Zip(rightChildren, (x, y) => new { Left = x, Right = y });
 

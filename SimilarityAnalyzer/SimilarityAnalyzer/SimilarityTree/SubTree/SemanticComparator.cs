@@ -14,8 +14,8 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
     {
         public bool SyntaxEquals(TPair pair, TInformation information)
         {
-            SemanticModel leftModel = information.Provide(pair.Left.Node.SyntaxTree);
-            SemanticModel rightModel = information.Provide(pair.Right.Node.SyntaxTree);
+            var leftModel = information.Provide(pair.Left.Node.SyntaxTree);
+            var rightModel = information.Provide(pair.Right.Node.SyntaxTree);
 
             return Equals(pair.Left.Node, pair.Right.Node, leftModel, rightModel);
         }
@@ -37,8 +37,8 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
 
         private bool TypeEquals(IdentifierNameSyntax left, IdentifierNameSyntax right, SemanticModel leftModel, SemanticModel rightModel)
         {
-            TypeInfo leftType = leftModel.GetTypeInfo(left);
-            TypeInfo rightType = rightModel.GetTypeInfo(right);
+            var leftType = leftModel.GetTypeInfo(left);
+            var rightType = rightModel.GetTypeInfo(right);
 
             return leftType.Type == rightType.Type;
         }
