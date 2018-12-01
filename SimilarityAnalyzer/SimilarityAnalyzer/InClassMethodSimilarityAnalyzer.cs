@@ -57,7 +57,7 @@ namespace SimilarityAnalyzer
 
             MethodFragmentsInClass source = new MethodFragmentsInClass(@class);
             NodeToNode pre = new NodeToNode();
-            ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> comparator = (ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>)new StructuralComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>();
+            ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> comparator = new StructuralComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>();
             SingleTreeInformation information = new SingleTreeInformation(context.SemanticModel);
 
             SimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> analyzer = new SimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>(source, pre, Enumerable.Repeat(comparator, 1).ToList(), information);
@@ -75,11 +75,13 @@ namespace SimilarityAnalyzer
 
             MethodFragmentsInClass source = new MethodFragmentsInClass(@class);
             NodeToNode pre = new NodeToNode();
-            ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> comparator = (ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>)new StructuralComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>();
-            ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> dfComparator = (ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>)new DataflowComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>();
+            ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> comparator = new StructuralComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>();
+            ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> dfComparator = new DataflowComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>();
+            ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> semanticComparator = new CompatibleComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>();
+            ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> refactorComparator = new RefactorableMemberAccessComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>();
             SingleTreeInformation information = new SingleTreeInformation(context.SemanticModel);
 
-            SimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> analyzer = new SimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>(source, pre, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>>() { comparator, dfComparator }, information);
+            SimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation> analyzer = new SimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>(source, pre, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>>() { comparator, dfComparator, semanticComparator, refactorComparator }, information);
             IEnumerable<SyntaxPair<NodeAsRepresentation>> similarities = analyzer.FindAll();
 
             similarities = similarities.OrderByDescending(s => s.Left.Node.DescendantNodes().Count());
@@ -93,8 +95,8 @@ namespace SimilarityAnalyzer
             ClassDeclarationSyntax @class = context.Node as ClassDeclarationSyntax;
 
             MethodFragmentsInClass source = new MethodFragmentsInClass(@class);
-            var pre = new NodeToVector(SyntaxMasks.AllNodes);
-            ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation> comparator = (ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation>)new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation>();
+            NodeToVector pre = new NodeToVector(SyntaxMasks.AllNodes);
+            ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation> comparator = new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation>();
             SingleTreeInformation information = new SingleTreeInformation(context.SemanticModel);
 
             SimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation> analyzer = new SimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation>(source, pre, Enumerable.Repeat(comparator, 1).ToList(), information);
@@ -103,8 +105,26 @@ namespace SimilarityAnalyzer
 
         private void Report(SyntaxNodeAnalysisContext context, SyntaxNode left, SyntaxNode right)
         {
-            context.ReportDiagnostic(Diagnostic.Create(Rule, left.GetLocation(), new[] { right.GetLocation() }, right.GetLocation().GetLineSpan()));
-            //context.ReportDiagnostic(Diagnostic.Create(Rule, right.GetLocation(), left.GetLocation().GetLineSpan()));
+            context.ReportDiagnostic(Diagnostic.Create(Rule, left.GetLocation(), new[] { right.GetLocation() }, GetVisualStudioInfo(right.GetLocation())));
+        }
+
+        private string GetVisualStudioInfo(Location location)
+        {
+            string result = "";
+            FileLinePositionSpan pos = location.GetLineSpan();
+            if (pos.Path != null)
+            {
+                // user-visible line and column counts are 1-based, but internally are 0-based.
+                result += "(" 
+                    + pos.Path 
+                    + "@" 
+                    + (pos.StartLinePosition.Line + 1) + ":" + (pos.StartLinePosition.Character + 1) 
+                    + "-"
+                    + (pos.EndLinePosition.Line + 1) + ":" + (pos.EndLinePosition.Character + 1) 
+                    + ")";
+            }
+
+            return result;
         }
     }
 }
