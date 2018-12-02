@@ -33,24 +33,24 @@ namespace SimilarityAnalyzer.SyntaxComparision.Algorithm
 
         public IEnumerable<TPair> FindAll()
         {
-            IEnumerable<Microsoft.CodeAnalysis.SyntaxNode> nodes = source.Fetch().Select((x, i) =>
+            var nodes = source.Fetch().Select((x, i) =>
             {
                 measure.Sources = i;
                 return x;
             });
-            IEnumerable<TRepresentation> representations = nodes.Select(node => preprocessor.Process(node));
+            var representations = nodes.Select(node => preprocessor.Process(node));
 
-            IEnumerable<TPair> pairs = representations.InnerPairs<TPair, TRepresentation>().Select((x, i) =>
+            var pairs = representations.InnerPairs<TPair, TRepresentation>().Select((x, i) =>
             {
                 measure.Pairs = i;
                 return x;
             });
 
             measure.Similarities = Enumerable.Repeat(0, comparators.Count()).ToList();
-            foreach (TPair element in pairs)
+            foreach (var element in pairs)
             {
-                int cIndex = 0;
-                foreach (ISyntaxComparator<TPair, TRepresentation, TInformation> comparator in comparators)
+                var cIndex = 0;
+                foreach (var comparator in comparators)
                 {
                     if (!comparator.SyntaxEquals(element, information))
                         goto SkipThisElement;
@@ -74,7 +74,7 @@ namespace SimilarityAnalyzer.SyntaxComparision.Algorithm
 
         public override string ToString()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append(Sources);
             sb.Append('>');
             sb.Append(Pairs);

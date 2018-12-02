@@ -46,7 +46,6 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
         private bool ChildrenEquals(IEnumerable<SyntaxNode> leftChildren, IEnumerable<SyntaxNode> rightChildren, SemanticModel leftModel, SemanticModel rightModel)
         {
             var parallelEnumerator = leftChildren.Zip(rightChildren, (x, y) => new { Left = x, Right = y });
-
             if (parallelEnumerator.Any(pair => !Equals(pair.Left, pair.Right, leftModel, rightModel)))
                 return false;
 
