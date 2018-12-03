@@ -33,20 +33,20 @@ namespace SimilarityAnalyzer.SyntaxComparision.Algorithm
 
         public IEnumerable<TPair> FindAll()
         {
-            var nodes = source.Fetch().Select((x, i) =>
+            var nodes = source.Fetch().ToList();
+
+            measure.Sources = nodes.Count();
+
+            var representations = nodes.Select(node => preprocessor.Process(node)).ToList();
+
+            var pairs = representations.InnerPairs<TPair, TRepresentation>().Select((x) =>
             {
-                measure.Sources = i;
+                measure.Pairs += 1;
+
                 return x;
             });
-            var representations = nodes.Select(node => preprocessor.Process(node));
 
-            var pairs = representations.InnerPairs<TPair, TRepresentation>().Select((x, i) =>
-            {
-                measure.Pairs = i;
-                return x;
-            });
-
-            measure.Similarities = Enumerable.Repeat(0, comparators.Count()).ToList();
+            measure.Similarities = Enumerable.Repeat((long)0, comparators.Count()).ToList();
             foreach (var element in pairs)
             {
                 var cIndex = 0;
@@ -68,9 +68,9 @@ namespace SimilarityAnalyzer.SyntaxComparision.Algorithm
 
     public struct SimilarityMeasure
     {
-        public int Sources;
-        public int Pairs;
-        public List<int> Similarities;
+        public long Sources;
+        public long Pairs;
+        public List<long> Similarities;
 
         public override string ToString()
         {
