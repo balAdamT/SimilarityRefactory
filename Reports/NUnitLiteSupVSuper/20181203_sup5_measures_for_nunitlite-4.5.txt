@@ -1,0 +1,5 @@
+Target: C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\nunitlite-4.5.csproj
+Minimum depth:5
+Config: sup
+Runtime in ms: 90598
+SUP:5741>16476670>82643

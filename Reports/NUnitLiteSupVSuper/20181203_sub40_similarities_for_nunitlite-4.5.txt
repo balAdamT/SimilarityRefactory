@@ -1,0 +1,11 @@
+Target: C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\nunitlite-4.5.csproj
+Minimum depth:40
+Config: sub
+Runtime in ms: 411
+C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\ColorConsole.cs: (67,20)-(94,21) vs C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\ColorConsole.cs: (131,20)-(158,21)
+C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\ColorConsole.cs: (101,20)-(128,21) vs C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\ColorConsole.cs: (67,20)-(94,21)
+C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\ColorConsole.cs: (101,20)-(128,21) vs C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\ColorConsole.cs: (131,20)-(158,21)
+C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\OutputManager.cs: (100,12)-(120,13) vs C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\OutputManager.cs: (64,12)-(84,13)
+C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\TestSelectionParser.cs: (106,8)-(127,9) vs C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\TestSelectionParser.cs: (79,8)-(100,9)
+C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\TestSelectionParser.cs: (183,8)-(198,9) vs C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\TestSelectionParser.cs: (165,8)-(180,9)
+C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\TestSelectionParser.cs: (186,12)-(195,73) vs C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\TestSelectionParser.cs: (168,12)-(177,60)

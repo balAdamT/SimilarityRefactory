@@ -10,6 +10,7 @@ using SimilarityAnalyzer.SyntaxComparision.Interfaces;
 using SimilarityAnalyzer.SyntaxVectors;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 namespace SimilarityAnalyzerManualExecutor
@@ -48,6 +49,7 @@ namespace SimilarityAnalyzerManualExecutor
             var project = workspace.OpenProjectAsync(path).Result;
             Console.WriteLine("Loaded project");
             logger.SetProjectName(project.Name);
+            logger.SetMinSize(minDepth);
             ExecuteForProject(project, minDepth, enabled);
             Console.WriteLine("Finished analysing project");
         }
@@ -111,7 +113,7 @@ namespace SimilarityAnalyzerManualExecutor
             if (enabled == null || enabled.Contains(key))
             {
                 logger.SetCurrentKey(key);
-                sub_vec_comp_df( compilation, minDepth, logger);
+                sub_vec_comp_df(compilation, minDepth, logger);
             }
 
             key = "sub+vec+com+df+refactInvoc+refactMember";
@@ -128,8 +130,13 @@ namespace SimilarityAnalyzerManualExecutor
             var source = new MethodFragmentsInCompilation(compilation, minDepth);
             var information = new OncePerTreeInformation(compilation);
             var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, Enumerable.Repeat(subComparator, 1).ToList(), information);
-            var similarities = analyzer.FindAll().ToList();
 
+            var sv = new Stopwatch();
+            sv.Start();
+            var similarities = analyzer.FindAll().ToList();
+            sv.Stop();
+
+            logger.SetRuntime(sv.ElapsedMilliseconds);
             logger.SetCompletionDate(DateTime.Now);
             logger.LogMeasures(analyzer.Measure);
             logger.LogSimilarities(similarities);
@@ -140,9 +147,14 @@ namespace SimilarityAnalyzerManualExecutor
             var source = new LeavesInCompilation(compilation);
             var information = new OncePerTreeInformation(compilation);
             var analyzer = new MeasuredSimilarityFinder<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, Enumerable.Repeat(superComparator, 1).ToList(), information);
+
+            var sv = new Stopwatch();
+            sv.Start();
             var similarities = analyzer.FindAll().ToList();
+            sv.Stop();
 
             logger.SetCompletionDate(DateTime.Now);
+            logger.SetRuntime(sv.ElapsedMilliseconds);
             logger.LogMeasures(analyzer.Measure);
             logger.LogSimilarities(similarities);
         }
@@ -152,8 +164,13 @@ namespace SimilarityAnalyzerManualExecutor
             var source = new MethodFragmentsInCompilation(compilation, minDepth);
             var information = new OncePerTreeInformation(compilation);
             var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>(source, withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>>() { vectorComparator, subComparatorWithVector }, information);
-            var similarities = analyzer.FindAll().ToList();
 
+            var sv = new Stopwatch();
+            sv.Start();
+            var similarities = analyzer.FindAll().ToList();
+            sv.Stop();
+
+            logger.SetRuntime(sv.ElapsedMilliseconds);
             logger.SetCompletionDate(DateTime.Now);
             logger.LogMeasures(analyzer.Measure);
             logger.LogSimilarities(similarities);
@@ -172,8 +189,13 @@ namespace SimilarityAnalyzerManualExecutor
                     semanticComparator,
                 },
                 information);
-            var similarities = analyzer.FindAll().ToList();
 
+            var sv = new Stopwatch();
+            sv.Start();
+            var similarities = analyzer.FindAll().ToList();
+            sv.Stop();
+
+            logger.SetRuntime(sv.ElapsedMilliseconds);
             logger.SetCompletionDate(DateTime.Now);
             logger.LogMeasures(analyzer.Measure);
             logger.LogSimilarities(similarities);
@@ -194,8 +216,13 @@ namespace SimilarityAnalyzerManualExecutor
                     identifierComparator,
                 },
                 information);
-            var similarities = analyzer.FindAll().ToList();
 
+            var sv = new Stopwatch();
+            sv.Start();
+            var similarities = analyzer.FindAll().ToList();
+            sv.Stop();
+
+            logger.SetRuntime(sv.ElapsedMilliseconds);
             logger.SetCompletionDate(DateTime.Now);
             logger.LogMeasures(analyzer.Measure);
             logger.LogSimilarities(similarities);
@@ -215,8 +242,13 @@ namespace SimilarityAnalyzerManualExecutor
                     dataflowComparator
                 },
                 information);
-            var similarities = analyzer.FindAll().ToList();
 
+            var sv = new Stopwatch();
+            sv.Start();
+            var similarities = analyzer.FindAll().ToList();
+            sv.Stop();
+
+            logger.SetRuntime(sv.ElapsedMilliseconds);
             logger.SetCompletionDate(DateTime.Now);
             logger.LogMeasures(analyzer.Measure);
             logger.LogSimilarities(similarities);
@@ -238,8 +270,13 @@ namespace SimilarityAnalyzerManualExecutor
                     refactorMembersComparator
                 },
                 information);
-            var similarities = analyzer.FindAll().ToList();
 
+            var sv = new Stopwatch();
+            sv.Start();
+            var similarities = analyzer.FindAll().ToList();
+            sv.Stop();
+
+            logger.SetRuntime(sv.ElapsedMilliseconds);
             logger.SetCompletionDate(DateTime.Now);
             logger.LogMeasures(analyzer.Measure);
             logger.LogSimilarities(similarities);
@@ -259,8 +296,13 @@ namespace SimilarityAnalyzerManualExecutor
                     dataflowComparator
                 },
                 information);
-            var similarities = analyzer.FindAll().ToList();
 
+            var sv = new Stopwatch();
+            sv.Start();
+            var similarities = analyzer.FindAll().ToList();
+            sv.Stop();
+
+            logger.SetRuntime(sv.ElapsedMilliseconds);
             logger.SetCompletionDate(DateTime.Now);
             logger.LogMeasures(analyzer.Measure);
             logger.LogSimilarities(similarities);
@@ -282,8 +324,13 @@ namespace SimilarityAnalyzerManualExecutor
                     refactorMembersComparator
                 },
                 information);
-            var similarities = analyzer.FindAll().ToList();
 
+            var sv = new Stopwatch();
+            sv.Start();
+            var similarities = analyzer.FindAll().ToList();
+            sv.Stop();
+
+            logger.SetRuntime(sv.ElapsedMilliseconds);
             logger.SetCompletionDate(DateTime.Now);
             logger.LogMeasures(analyzer.Measure);
             logger.LogSimilarities(similarities);

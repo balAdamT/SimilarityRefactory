@@ -28,17 +28,17 @@ namespace SimilarityAnalyzerManualExecutor
                 var pathToPorject = @"C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\nunitlite-4.5.csproj";
                 //string pathToPorject = @"C:\Git Repos\NUnit\nunit\src\NUnitFramework\framework\nunit.framework-4.5.csproj";
 
-                Execute(pathToPorject, 21, new HashSet<string> {
+                Execute(pathToPorject, 111, new HashSet<string> {
                     "sub",
-                    "sup",
+                    //"sup",
                     "sub+vec",
-                    "sub+vec+seman",
-                    "sub+vec+seman",
-                    "sub+vec+seman+lit+id",
-                    "sub+vec+seman+df",
-                    "sub+vec+seman+df+refactInvoc+refactMember",
-                    "sub+vec+com+df",
-                    "sub+vec+com+df+refactInvoc+refactMember"
+                    //"sub+vec+seman",
+                    //"sub+vec+seman",
+                    //"sub+vec+seman+lit+id",
+                    //"sub+vec+seman+df",
+                    //"sub+vec+seman+df+refactInvoc+refactMember",
+                    //"sub+vec+com+df",
+                    //"sub+vec+com+df+refactInvoc+refactMember"
                 });
             }
 #else
@@ -82,7 +82,7 @@ namespace SimilarityAnalyzerManualExecutor
                 "id: value comparision of the identifiers\n" +
                 "df: dataflow comparision of the identifiers\n" +
                 "refactMember: comparision of identifiers for refactorability: only first member access differs\n" +
-                "refactInvoc: comparision of identifiers for refactorability: methods are equals and ");
+                "refactInvoc: comparision of identifiers for refactorability: methods are equals and");
         }
 
         private static void Execute(string target, int minDepth, HashSet<string> keys)

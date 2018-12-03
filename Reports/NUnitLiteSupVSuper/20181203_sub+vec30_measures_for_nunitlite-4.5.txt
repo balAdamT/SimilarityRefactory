@@ -1,0 +1,5 @@
+Target: C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\nunitlite-4.5.csproj
+Minimum depth:30
+Config: sub+vec
+Runtime in ms: 399
+SUB+VEC:359>64261>11>11

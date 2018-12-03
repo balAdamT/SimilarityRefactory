@@ -15,6 +15,8 @@ namespace SimilarityAnalyzerManualExecutor
         private string currentKey;
         private string currentProjectName;
         private string header;
+        private int minSize;
+        private long currentElapsedMilliseconds;
 
         public Logger(string target, int minDepth)
         {
@@ -24,6 +26,11 @@ namespace SimilarityAnalyzerManualExecutor
         internal void SetCompletionDate(DateTime now)
         {
             currentTimeStamp = now;
+        }
+        
+        internal void SetMinSize(int minDepth)
+        {
+            minSize = minDepth;
         }
 
         internal void SetCurrentKey(string key)
@@ -42,6 +49,11 @@ namespace SimilarityAnalyzerManualExecutor
             sb.AppendLine($@"{currentKey.ToUpper()}:{measure}");
 
             Log("measures", sb);
+        }
+
+        internal void SetRuntime(long elapsedMilliseconds)
+        {
+            currentElapsedMilliseconds = elapsedMilliseconds;
         }
 
         internal void LogSimilarities(List<SyntaxPair<NodeAsRepresentation>> similarities)
@@ -89,7 +101,7 @@ namespace SimilarityAnalyzerManualExecutor
         private void Log(string resultType, StringBuilder sb)
         {
             var currentTimeStampString = currentTimeStamp.ToString("yyyyMMdd");
-            var fileName = currentTimeStampString + "_" + currentKey + "_" + resultType + "_for_" + currentProjectName + ".txt";
+            var fileName = currentTimeStampString + "_" + currentKey + minSize + "_" + resultType + "_for_" + currentProjectName + ".txt";
             var content = GetHeader() + Environment.NewLine + sb.ToString();
 
             File.WriteAllText(fileName, content);
@@ -98,7 +110,7 @@ namespace SimilarityAnalyzerManualExecutor
 
         private string GetHeader()
         {
-            return header + Environment.NewLine + $"Config: {currentKey}";
+            return header + Environment.NewLine + $"Config: {currentKey}{Environment.NewLine}Runtime in ms: {currentElapsedMilliseconds}";
         }
     }
 }
