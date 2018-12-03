@@ -16,47 +16,43 @@ namespace SimilarityAnalyzerManualExecutor
 {
     internal class Executor
     {
-        private bool list = false;
-        private NodeToNode identity = new NodeToNode();
-        private NodeToVector withVector = new NodeToVector();
-        private ISyntaxComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> superComparator = new SuperTreeComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
-        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> subComparator = new StructuralComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        private readonly NodeToNode identity = new NodeToNode();
+        private readonly NodeToVector withVector = new NodeToVector();
 
-        private ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> subComparatorWithVector = new StructuralComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
-        private ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> vectorComparator = new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> superComparator = new SuperTreeComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> subComparator = new StructuralComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
 
-        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> semanticComparator = new SemanticComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
-        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> identifierComparator = new IdentifierComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
-        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> literalComparator = new LiteralComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> subComparatorWithVector = new StructuralComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> vectorComparator = new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
 
+        private readonly ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> semanticComparator = new SemanticComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> identifierComparator = new IdentifierComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> literalComparator = new LiteralComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
 
-        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> compatibleComparator = new CompatibleComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
-        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> dataflowComparataor = new DataflowComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
-        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> refactorInvocationsComparataor = new RefactorableInvocationsComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
-        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> refactorMembersComparataor = new RefactorableMemberAccessComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> compatibleComparator = new CompatibleComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> dataflowComparator = new DataflowComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> refactorInvocationsComparator = new RefactorableInvocationsComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
+        private readonly ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> refactorMembersComparator = new RefactorableMemberAccessComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
 
+        private Logger logger;
 
-
-        public Executor(bool list)
+        public Executor(Logger logger)
         {
-            this.list = list;
+            this.logger = logger;
         }
 
-        public void ExecuteForProject(string path, HashSet<string> enabled)
+        public void ExecuteForProject(string path, int minDepth, HashSet<string> enabled)
         {
             MSBuildLocator.RegisterDefaults();
             var workspace = MSBuildWorkspace.Create();
             var project = workspace.OpenProjectAsync(path).Result;
             Console.WriteLine("Loaded project");
-            while (true)
-            {
-                ExecuteForProject(project, enabled);
-                Console.WriteLine("Done!");
-                Console.ReadKey();
-            }
+            logger.SetProjectName(project.Name);
+            ExecuteForProject(project, minDepth, enabled);
+            Console.WriteLine("Finished analysing project");
         }
 
-        private void ExecuteForProject(Project project, HashSet<string> enabled)
+        private void ExecuteForProject(Project project, int minDepth, HashSet<string> enabled)
         {
             var projectName = project.Name;
             var compilation = project.GetCompilationAsync().Result;
@@ -65,161 +61,234 @@ namespace SimilarityAnalyzerManualExecutor
             key = "sub";
             if (enabled == null || enabled.Contains(key))
             {
-                var m1 = Config1(compilation);
-                Log(projectName, key, m1);
+                logger.SetCurrentKey(key);
+                sub(compilation, minDepth, logger);
             }
 
             key = "sup";
             if (enabled == null || enabled.Contains(key))
             {
-                var m2 = Config2(compilation);
-                Log(projectName, key, m2);
+                logger.SetCurrentKey(key);
+                super(compilation, minDepth, logger);
             }
 
-            key = "vec";
+            key = "sub+vec";
             if (enabled == null || enabled.Contains(key))
             {
-                var m3 = Config3(compilation);
-                Log(projectName, key, m3);
+                logger.SetCurrentKey(key);
+                sub_vec(compilation, minDepth, logger);
             }
 
-            key = "sub+df";
+            key = "sub+vec+seman";
             if (enabled == null || enabled.Contains(key))
             {
-                var m4 = Config4(compilation);
-                Log(projectName, key, m4);
+                logger.SetCurrentKey(key);
+                sub_vec_seman(compilation, minDepth, logger);
             }
 
-            key = "sub+df+seman";
+            key = "sub+vec+lit+id+seman";
             if (enabled == null || enabled.Contains(key))
             {
-                var m4 = Config5(compilation);
-                Log(projectName, key, m4);
+                logger.SetCurrentKey(key);
+                sub_vec_seman_lit_id(compilation, minDepth, logger);
             }
 
-            key = "sub+com";
+            key = "sub+vec+seman+df";
             if (enabled == null || enabled.Contains(key))
             {
-                var m4 = Config6(compilation);
-                Log(projectName, key, m4);
+                logger.SetCurrentKey(key);
+                sub_vec_seman_df(compilation, minDepth, logger);
             }
+
+            key = "sub+vec+seman+df+refactInvoc+refactMember";
+            if (enabled == null || enabled.Contains(key))
+            {
+                logger.SetCurrentKey(key);
+                sub_vec_seman_df_refact(compilation, minDepth, logger);
+            }
+
+            key = "sub+vec+com+df";
+            if (enabled == null || enabled.Contains(key))
+            {
+                logger.SetCurrentKey(key);
+                sub_vec_comp_df( compilation, minDepth, logger);
+            }
+
+            key = "sub+vec+com+df+refactInvoc+refactMember";
+            if (enabled == null || enabled.Contains(key))
+            {
+                logger.SetCurrentKey(key);
+                sub_vec_comp_df_refact(compilation, minDepth, logger);
+            }
+
         }
 
-        private void Log(string projectName, string configName, SimilarityMeasure measure)
-        {
-            Console.WriteLine($@"{projectName}:{configName.ToUpper()}:{measure}");
-        }
-
-        private const int minDepth = 30;
-
-        private SimilarityMeasure Config6(Compilation compilation)
-        {
-            var source = new MethodFragmentsInCompilation(compilation, minDepth);
-            var information = new OncePerTreeInformation(compilation);
-            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>>() { subComparator, compatibleComparator }, information);
-            var similarities = analyzer.FindAll().ToList();
-
-            if (list)
-                ListSimilarities(similarities);
-
-            return analyzer.Measure;
-        }
-
-        private SimilarityMeasure Config5(Compilation compilation)
-        {
-            var source = new MethodFragmentsInCompilation(compilation, minDepth);
-            var information = new OncePerTreeInformation(compilation);
-            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>>() { subComparator, refactorInvocationsComparataor, semanticComparator }, information);
-            var similarities = analyzer.FindAll().ToList();
-
-            if (list)
-                ListSimilarities(similarities);
-
-            return analyzer.Measure;
-        }
-
-        private SimilarityMeasure Config4(Compilation compilation)
-        {
-            var source = new MethodFragmentsInCompilation(compilation, minDepth);
-            var information = new OncePerTreeInformation(compilation);
-            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>>() { subComparator, refactorInvocationsComparataor }, information);
-            var similarities = analyzer.FindAll().ToList();
-
-            if (list)
-                ListSimilarities(similarities);
-
-            return analyzer.Measure;
-        }
-
-        private SimilarityMeasure Config3(Compilation compilation)
-        {
-            var source = new MethodFragmentsInCompilation(compilation, minDepth);
-            var information = new OncePerTreeInformation(compilation);
-            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>(source, withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>>() { vectorComparator, subComparatorWithVector }, information);
-            var similarities = analyzer.FindAll().ToList();
-
-            if (list)
-                ListSimilarities(similarities);
-
-            return analyzer.Measure;
-        }
-
-        private SimilarityMeasure Config2(Compilation compilation)
-        {
-            var source = new LeavesInCompilation(compilation);
-            //TODO in this case we don't know the semantic model...
-            var information = new OncePerTreeInformation(compilation);
-            var analyzer = new MeasuredSimilarityFinder<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, Enumerable.Repeat(superComparator, 1).ToList(), information);
-            var similarities = analyzer.FindAll().ToList();
-
-            if (list)
-                ListSimilarities(similarities);
-
-            return analyzer.Measure;
-        }
-
-        private SimilarityMeasure Config1(Compilation compilation)
+        private void sub(Compilation compilation, int minDepth, Logger logger)
         {
             var source = new MethodFragmentsInCompilation(compilation, minDepth);
             var information = new OncePerTreeInformation(compilation);
             var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, Enumerable.Repeat(subComparator, 1).ToList(), information);
             var similarities = analyzer.FindAll().ToList();
 
-            if (list)
-                ListSimilarities(similarities);
-
-            return analyzer.Measure;
+            logger.SetCompletionDate(DateTime.Now);
+            logger.LogMeasures(analyzer.Measure);
+            logger.LogSimilarities(similarities);
         }
 
-        private void ListSimilarities(List<SyntaxPair<NodeAsRepresentation>> similarities)
+        private void super(Compilation compilation, int minDepth, Logger logger)
         {
-            foreach (var similiarity in similarities)
-            {
-                Console.WriteLine(
-                  $@"{similiarity.Left.Node.GetLocation().GetLineSpan()} vs {similiarity.Right.Node.GetLocation().GetLineSpan()}"
-                );
-            }
-        }
-        private void ListSimilarities(List<SyntaxLeafPair<NodeAsRepresentation>> similarities)
-        {
-            foreach (var similiarity in similarities)
-            {
-                Console.WriteLine(
-                    $@"{similiarity.Left.Node.GetLocation().GetLineSpan()} vs {similiarity.Right.Node.GetLocation().GetLineSpan()}"
-                );
-            }
+            var source = new LeavesInCompilation(compilation);
+            var information = new OncePerTreeInformation(compilation);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, Enumerable.Repeat(superComparator, 1).ToList(), information);
+            var similarities = analyzer.FindAll().ToList();
+
+            logger.SetCompletionDate(DateTime.Now);
+            logger.LogMeasures(analyzer.Measure);
+            logger.LogSimilarities(similarities);
         }
 
-
-        private void ListSimilarities(List<SyntaxPair<NodeWithVector>> similarities)
+        private void sub_vec(Compilation compilation, int minDepth, Logger logger)
         {
-            foreach (var similiarity in similarities)
-            {
-                Console.WriteLine(
-                    $@"{similiarity.Left.Node.GetLocation().GetLineSpan()} vs {similiarity.Right.Node.GetLocation().GetLineSpan()}"
-                );
-            }
+            var source = new MethodFragmentsInCompilation(compilation, minDepth);
+            var information = new OncePerTreeInformation(compilation);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>(source, withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>>() { vectorComparator, subComparatorWithVector }, information);
+            var similarities = analyzer.FindAll().ToList();
+
+            logger.SetCompletionDate(DateTime.Now);
+            logger.LogMeasures(analyzer.Measure);
+            logger.LogSimilarities(similarities);
+        }
+
+        private void sub_vec_seman(Compilation compilation, int minDepth, Logger logger)
+        {
+            var source = new MethodFragmentsInCompilation(compilation, minDepth);
+            var information = new OncePerTreeInformation(compilation);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>(
+                source,
+                withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>>()
+                {
+                    vectorComparator,
+                    subComparatorWithVector,
+                    semanticComparator,
+                },
+                information);
+            var similarities = analyzer.FindAll().ToList();
+
+            logger.SetCompletionDate(DateTime.Now);
+            logger.LogMeasures(analyzer.Measure);
+            logger.LogSimilarities(similarities);
+        }
+
+        private void sub_vec_seman_lit_id(Compilation compilation, int minDepth, Logger logger)
+        {
+            var source = new MethodFragmentsInCompilation(compilation, minDepth);
+            var information = new OncePerTreeInformation(compilation);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>(
+                source,
+                withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>>()
+                {
+                    vectorComparator,
+                    subComparatorWithVector,
+                    semanticComparator,
+                    literalComparator,
+                    identifierComparator,
+                },
+                information);
+            var similarities = analyzer.FindAll().ToList();
+
+            logger.SetCompletionDate(DateTime.Now);
+            logger.LogMeasures(analyzer.Measure);
+            logger.LogSimilarities(similarities);
+        }
+
+        private void sub_vec_seman_df(Compilation compilation, int minDepth, Logger logger)
+        {
+            var source = new MethodFragmentsInCompilation(compilation, minDepth);
+            var information = new OncePerTreeInformation(compilation);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>(
+                source,
+                withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>>()
+                {
+                    vectorComparator,
+                    subComparatorWithVector,
+                    semanticComparator,
+                    dataflowComparator
+                },
+                information);
+            var similarities = analyzer.FindAll().ToList();
+
+            logger.SetCompletionDate(DateTime.Now);
+            logger.LogMeasures(analyzer.Measure);
+            logger.LogSimilarities(similarities);
+        }
+
+        private void sub_vec_seman_df_refact(Compilation compilation, int minDepth, Logger logger)
+        {
+            var source = new MethodFragmentsInCompilation(compilation, minDepth);
+            var information = new OncePerTreeInformation(compilation);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>(
+                source,
+                withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>>()
+                {
+                    vectorComparator,
+                    subComparatorWithVector,
+                    semanticComparator,
+                    dataflowComparator,
+                    refactorInvocationsComparator,
+                    refactorMembersComparator
+                },
+                information);
+            var similarities = analyzer.FindAll().ToList();
+
+            logger.SetCompletionDate(DateTime.Now);
+            logger.LogMeasures(analyzer.Measure);
+            logger.LogSimilarities(similarities);
+        }
+
+        private void sub_vec_comp_df(Compilation compilation, int minDepth, Logger logger)
+        {
+            var source = new MethodFragmentsInCompilation(compilation, minDepth);
+            var information = new OncePerTreeInformation(compilation);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>(
+                source,
+                withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>>()
+                {
+                    vectorComparator,
+                    subComparatorWithVector,
+                    compatibleComparator,
+                    dataflowComparator
+                },
+                information);
+            var similarities = analyzer.FindAll().ToList();
+
+            logger.SetCompletionDate(DateTime.Now);
+            logger.LogMeasures(analyzer.Measure);
+            logger.LogSimilarities(similarities);
+        }
+
+        private void sub_vec_comp_df_refact(Compilation compilation, int minDepth, Logger logger)
+        {
+            var source = new MethodFragmentsInCompilation(compilation, minDepth);
+            var information = new OncePerTreeInformation(compilation);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>(
+                source,
+                withVector, new List<ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>>()
+                {
+                    vectorComparator,
+                    subComparatorWithVector,
+                    compatibleComparator,
+                    dataflowComparator,
+                    refactorInvocationsComparator,
+                    refactorMembersComparator
+                },
+                information);
+            var similarities = analyzer.FindAll().ToList();
+
+            logger.SetCompletionDate(DateTime.Now);
+            logger.LogMeasures(analyzer.Measure);
+            logger.LogSimilarities(similarities);
         }
     }
-
 }
+
+

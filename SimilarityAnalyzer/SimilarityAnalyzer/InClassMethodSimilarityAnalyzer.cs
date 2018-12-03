@@ -7,6 +7,7 @@ using SimilarityAnalyzer.SimilarityTree.SuperTree;
 using SimilarityAnalyzer.SimilarityTree.SuperTree.Algorithm;
 using SimilarityAnalyzer.SyntaxComparision.Algorithm;
 using SimilarityAnalyzer.SyntaxComparision.Data;
+using SimilarityAnalyzer.SyntaxComparision.Helpers;
 using SimilarityAnalyzer.SyntaxComparision.Information;
 using SimilarityAnalyzer.SyntaxComparision.Interfaces;
 using SimilarityAnalyzer.SyntaxVectors;
@@ -109,26 +110,7 @@ namespace SimilarityAnalyzer
 
         private void Report(SyntaxNodeAnalysisContext context, SyntaxNode left, SyntaxNode right)
         {
-            context.ReportDiagnostic(Diagnostic.Create(Rule, left.GetLocation(), new[] { right.GetLocation() }, GetVisualStudioInfo(right.GetLocation())));
-        }
-
-        private string GetVisualStudioInfo(Location location)
-        {
-            var result = "";
-            var pos = location.GetLineSpan();
-            if (pos.Path != null)
-            {
-                // user-visible line and column counts are 1-based, but internally are 0-based.
-                result += "("
-                    + pos.Path
-                    + "@"
-                    + (pos.StartLinePosition.Line + 1) + ":" + (pos.StartLinePosition.Character + 1)
-                    + "-"
-                    + (pos.EndLinePosition.Line + 1) + ":" + (pos.EndLinePosition.Character + 1)
-                    + ")";
-            }
-
-            return result;
+            context.ReportDiagnostic(Diagnostic.Create(Rule, left.GetLocation(), new[] { right.GetLocation() }, right.GetLocation().ToVisualStudioString()));
         }
     }
 }
