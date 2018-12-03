@@ -18,7 +18,7 @@ namespace SimilarityAnalyzerManualExecutor
 
         public Logger(string target, int minDepth)
         {
-            header = $"Target: {target}{Environment.NewLine}Minimum depth:{minDepth}{Environment.NewLine}";
+            header = $"Target: {target}{Environment.NewLine}Minimum depth:{minDepth}";
         }
 
         internal void SetCompletionDate(DateTime now)
