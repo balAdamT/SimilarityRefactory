@@ -20,7 +20,7 @@ namespace SimilarityAnalyzer.SyntaxComparision.Algorithm
         {
             foreach (MethodDeclarationSyntax method
               in @class.Members.Where(member => member.Kind() == SyntaxKind.MethodDeclaration))
-                foreach (SyntaxNode node in method.DescendantNodes().Where(node => node.DescendantNodes().Any()))
+                foreach (var node in method.DescendantNodes().Where(node => node.DescendantNodes().Any()))
                     yield return node;
         }
     }

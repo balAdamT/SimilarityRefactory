@@ -6,8 +6,8 @@ namespace SimilarityAnalyzerManualExecutor
     {
         private static void Main(string[] args)
         {
-            //TestNUnit();
-            TestLocal();
+            TestNUnit();
+            //TestLocal();
 
         }
 
