@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace SimilarityAnalyzer.SimilarityTree.SubTree
 {
-    class LiteralComparator<TPair, TRepresentation, TInformation> : ISyntaxComparator<TPair, TRepresentation, TInformation>
+    public class LiteralComparator<TPair, TRepresentation, TInformation> : ISyntaxComparator<TPair, TRepresentation, TInformation>
       where TRepresentation : ISyntaxRepresentation
       where TPair : ISyntaxPair<TRepresentation>
       where TInformation : ISyntaxInformation

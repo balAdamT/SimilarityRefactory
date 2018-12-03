@@ -15,7 +15,6 @@ namespace SyntaxComparision.Algorithm
         private readonly List<ISyntaxComparator<TPair, TRepresentation, TInformation>> comparators;
         private readonly TInformation information;
 
-        //TODO DI
         public SimilarityFinder(ISyntaxSource source, ISyntaxPreprocessor<TRepresentation> preprocessor, List<ISyntaxComparator<TPair, TRepresentation, TInformation>> comparators, TInformation information)
         {
             this.source = source;
@@ -26,10 +25,10 @@ namespace SyntaxComparision.Algorithm
 
         public IEnumerable<TPair> FindAll()
         {
-            IEnumerable<Microsoft.CodeAnalysis.SyntaxNode> nodes = source.Fetch();
-            IEnumerable<TRepresentation> representations = nodes.Select(node => preprocessor.Process(node));
-            IEnumerable<TPair> pairs = representations.InnerPairs<TPair, TRepresentation>();
-            IEnumerable<TPair> found = pairs.Where(comparators, information);
+            var nodes = source.Fetch();
+            IEnumerable<TRepresentation> representations = nodes.Select(node => preprocessor.Process(node)).ToList();
+            var pairs = representations.InnerPairs<TPair, TRepresentation>();
+            var found = pairs.Where(comparators, information);
 
             return found;
         }

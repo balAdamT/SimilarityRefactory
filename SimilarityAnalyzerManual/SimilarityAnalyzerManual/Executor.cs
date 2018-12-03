@@ -1,7 +1,6 @@
 ﻿using Microsoft.Build.Locator;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.MSBuild;
-using SimilarityAnalyzer.Helpers;
 using SimilarityAnalyzer.SimilarityTree.SubTree;
 using SimilarityAnalyzer.SimilarityTree.SuperTree;
 using SimilarityAnalyzer.SyntaxComparision.Algorithm;
@@ -9,11 +8,9 @@ using SimilarityAnalyzer.SyntaxComparision.Data;
 using SimilarityAnalyzer.SyntaxComparision.Information;
 using SimilarityAnalyzer.SyntaxComparision.Interfaces;
 using SimilarityAnalyzer.SyntaxVectors;
-using SimilarityAnalyzer.SyntaxVectors.Masking;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace SimilarityAnalyzerManualExecutor
 {
@@ -21,14 +18,22 @@ namespace SimilarityAnalyzerManualExecutor
     {
         private bool list = false;
         private NodeToNode identity = new NodeToNode();
-        private NodeToVector withVector = new NodeToVector(SyntaxMasks.AllNodes);
+        private NodeToVector withVector = new NodeToVector();
         private ISyntaxComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> superComparator = new SuperTreeComparator<SyntaxLeafPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
         private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> subComparator = new StructuralComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+
         private ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> subComparatorWithVector = new StructuralComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
         private ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation> vectorComparator = new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector, OncePerTreeInformation>();
-        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> dfComparataor = new DataflowComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+
         private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> semanticComparator = new SemanticComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> identifierComparator = new IdentifierComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> literalComparator = new LiteralComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+
+
         private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> compatibleComparator = new CompatibleComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> dataflowComparataor = new DataflowComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> refactorInvocationsComparataor = new RefactorableInvocationsComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
+        private ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation> refactorMembersComparataor = new RefactorableMemberAccessComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>();
 
 
 
@@ -105,7 +110,7 @@ namespace SimilarityAnalyzerManualExecutor
             Console.WriteLine($@"{projectName}:{configName.ToUpper()}:{measure}");
         }
 
-        const int minDepth = 12;
+        private const int minDepth = 30;
 
         private SimilarityMeasure Config6(Compilation compilation)
         {
@@ -124,7 +129,7 @@ namespace SimilarityAnalyzerManualExecutor
         {
             var source = new MethodFragmentsInCompilation(compilation, minDepth);
             var information = new OncePerTreeInformation(compilation);
-            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>>() { subComparator, dfComparataor, semanticComparator }, information);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>>() { subComparator, refactorInvocationsComparataor, semanticComparator }, information);
             var similarities = analyzer.FindAll().ToList();
 
             if (list)
@@ -137,7 +142,7 @@ namespace SimilarityAnalyzerManualExecutor
         {
             var source = new MethodFragmentsInCompilation(compilation, minDepth);
             var information = new OncePerTreeInformation(compilation);
-            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>>() { subComparator, dfComparataor }, information);
+            var analyzer = new MeasuredSimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>(source, identity, new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, OncePerTreeInformation>>() { subComparator, refactorInvocationsComparataor }, information);
             var similarities = analyzer.FindAll().ToList();
 
             if (list)

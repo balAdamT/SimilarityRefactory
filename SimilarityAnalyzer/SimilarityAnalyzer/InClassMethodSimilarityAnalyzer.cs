@@ -10,7 +10,6 @@ using SimilarityAnalyzer.SyntaxComparision.Data;
 using SimilarityAnalyzer.SyntaxComparision.Information;
 using SimilarityAnalyzer.SyntaxComparision.Interfaces;
 using SimilarityAnalyzer.SyntaxVectors;
-using SimilarityAnalyzer.SyntaxVectors.Masking;
 using SyntaxComparision.Algorithm;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -83,9 +82,9 @@ namespace SimilarityAnalyzer
             var information = new SingleTreeInformation(context.SemanticModel);
 
             var analyzer = new SimilarityFinder<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>(
-                source, 
+                source,
                 pre,
-                new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>>() { comparator, dfComparator, semanticComparator, refactorComparator, invocationComparator }, 
+                new List<ISyntaxComparator<SyntaxPair<NodeAsRepresentation>, NodeAsRepresentation, SingleTreeInformation>>() { comparator, dfComparator, semanticComparator, refactorComparator, invocationComparator },
                 information);
             var similarities = analyzer.FindAll();
 
@@ -100,7 +99,7 @@ namespace SimilarityAnalyzer
             var @class = context.Node as ClassDeclarationSyntax;
 
             var source = new MethodFragmentsInClass(@class);
-            var pre = new NodeToVector(SyntaxMasks.AllNodes);
+            var pre = new NodeToVector();
             ISyntaxComparator<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation> comparator = new VectorComparator<SyntaxPair<NodeWithVector>, NodeWithVector, SingleTreeInformation>();
             var information = new SingleTreeInformation(context.SemanticModel);
 
