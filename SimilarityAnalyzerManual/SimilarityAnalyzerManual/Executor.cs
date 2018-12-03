@@ -86,7 +86,7 @@ namespace SimilarityAnalyzerManualExecutor
                 sub_vec_seman(compilation, minDepth, logger);
             }
 
-            key = "sub+vec+lit+id+seman";
+            key = "sub+vec+seman+lit+id";
             if (enabled == null || enabled.Contains(key))
             {
                 logger.SetCurrentKey(key);
