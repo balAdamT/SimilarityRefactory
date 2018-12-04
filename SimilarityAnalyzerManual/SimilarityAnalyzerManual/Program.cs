@@ -63,7 +63,7 @@ namespace SimilarityAnalyzerManualExecutor
         {
             Console.WriteLine("Please pass the following arguments:\n" +
                 "1st: absolute path to target project's csproj file (only support .NET Framework)\n" +
-                "2nd: minimum size of code fragments to be analyzer, RECOMMENDED: 20\n" +
+                "2nd: minimum size of code fragments to be analyzer, RECOMMENDED: 25\n" +
                 "3rd and further (OPTIONAL): any number of analyzer configuration keys\n" +
                 "" +
                 "Valid configuration keys: sub, sup, sub+vec, sub+vec+seman, sub+vec+seman+lit+id, sub+vec+seman+df, sub+vec+seman+df+refactInvoc+refactMember, sub+vec+com+df, sub+vec+com+df+refactInvoc+refactMember\n" +
