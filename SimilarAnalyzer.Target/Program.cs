@@ -1,19 +1,21 @@
 ﻿namespace SimilarAnalyzer.Target
 {
-    internal class Class
+    internal class Person
     {
-        public Class C;
-        public Class OtherC;
-        public int Value;
-        public Class GetClass() { return null; }
-        public Class GetOtherClass() { return null; }
+        public Person Father;
+        public Person Mother;
+        public Person Sister;
+        public Person Brother;
+        public int Age;
+        public Person[] GetGrandMothers() { return new[] { Mother.Mother, Father.Mother }; }
+        public Person[] GetGrandFathers() { return new[] { Father.Father, Mother.Father }; }
     }
 
     internal class Program
     {
         private static void Main(string[] args)
         {
-            Class c = new Class();
+            Person c = new Person();
             Operation1(c, c);
             Operation2(c, c);
 
@@ -33,31 +35,31 @@
             }
         }
 
-        private static void Operation2(Class c1, Class c2)
+        private static void Operation2(Person c1, Person c2)
         {
-            int x = c1.C.Value;
-            var y = c2.C.C;
-            var d = c2?.C?.C;
-            var e = c2.GetClass().C;
-            var f = c2.C.C;
+            int x = c1.Father.Age;
+            var y = c2.Father.Father;
+            var d = c2?.Father?.Father;
+            var e = c2.GetGrandMothers();
+            var f = c2.Father.Father;
         }
 
-         static void Operation3(Class c1, Class c2)
+         static void Operation3(Person c1, Person c2)
         {
-            int x = c1.C.Value;
-            var y = c2.C.C;
-            var d = c2?.C?.C;
-            var e = c2.GetClass().C;
-            var f = c2.C.C;
+            int x = c1.Father.Age;
+            var y = c2.Father.Father;
+            var d = c2?.Father?.Father;
+            var e = c2.GetGrandMothers();
+            var f = c2.Father.Father;
         }
 
-        private static void Operation1(Class c1, Class c2)
+        private static void Operation1(Person c1, Person c2)
         {
-            int x = c1.C.Value;
-            var y = c2.C.C;
-            var d = c2?.C?.C;
-            var e = c2.GetClass().C;
-            var f = c2.C.C;
+            int x = c1.Father.Age;
+            var y = c2.Father.Father;
+            var d = c2?.Father?.Father;
+            var e = c2.GetGrandMothers();
+            var f = c2.Father.Father;
         }
     }
 }
