@@ -12,7 +12,7 @@ namespace SimilarityAnalyzerManualExecutor
 
             if (args.Length == 1 && (args[0] == "-h" || args[0] == "-H" || args[0] == "\\h" || args[0] == "--help"))
                 WriteHelp();
-            else if (args.Length == 1 && args[0] == "disambiguation")
+            else if (args.Length == 1 && args[0] == "-disambiguation")
                 WriteDisambiguation();
             else if (args.Length >= 3)
             {
@@ -82,7 +82,7 @@ namespace SimilarityAnalyzerManualExecutor
                 "id: value comparision of the identifiers\n" +
                 "df: dataflow comparision of the identifiers\n" +
                 "refactMember: comparision of identifiers for refactorability: only first member access differs\n" +
-                "refactInvoc: comparision of identifiers for refactorability: methods are equals and");
+                "refactInvoc: comparision of identifiers for refactorability: methods are equal");
         }
 
         private static void Execute(string target, int minDepth, HashSet<string> keys)
