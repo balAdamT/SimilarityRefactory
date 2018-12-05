@@ -19,9 +19,7 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
 
         private bool Equals(
             SyntaxNode left,
-            SyntaxNode right,
-            SemanticModel leftModel,
-            SemanticModel rightModel)
+            SyntaxNode right)
         {
             if (left.Kind() == SyntaxKind.IdentifierName)
             {

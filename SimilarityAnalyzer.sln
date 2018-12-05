@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimilarityAnalyzer", "Simil
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimilarityAnalyzer.Vsix", "SimilarityAnalyzer\SimilarityAnalyzer.Vsix\SimilarityAnalyzer.Vsix.csproj", "{41E69959-119F-4D3E-9543-C98977CF89B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimilarAnalyzer.Target", "SimilarAnalyzer.Target\SimilarAnalyzer.Target.csproj", "{9FFA34A1-33A4-4D3D-ACC1-0EBFA37CB58A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SimilarityAnalyzer.Target", "SimilarAnalyzer.Target\SimilarityAnalyzer.Target.csproj", "{9FFA34A1-33A4-4D3D-ACC1-0EBFA37CB58A}"
 	ProjectSection(ProjectDependencies) = postProject
 		{5EE6354C-8361-48BF-B76B-7A97930EBE49} = {5EE6354C-8361-48BF-B76B-7A97930EBE49}
 	EndProjectSection

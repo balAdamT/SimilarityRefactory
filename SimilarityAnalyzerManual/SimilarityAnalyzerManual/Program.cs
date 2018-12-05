@@ -28,13 +28,12 @@ namespace SimilarityAnalyzerManualExecutor
                 var pathToPorject = @"C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\nunitlite-4.5.csproj";
                 //string pathToPorject = @"C:\Git Repos\NUnit\nunit\src\NUnitFramework\framework\nunit.framework-4.5.csproj";
 
-                Execute(pathToPorject, 111, new HashSet<string> {
-                    "sub",
+                Execute(pathToPorject, 25, new HashSet<string> {
+                    //"sub",
                     //"sup",
-                    "sub+vec",
+                    //"sub+vec",
                     //"sub+vec+seman",
-                    //"sub+vec+seman",
-                    //"sub+vec+seman+lit+id",
+                    "sub+vec+seman+lit+id",
                     //"sub+vec+seman+df",
                     //"sub+vec+seman+df+refactInvoc+refactMember",
                     //"sub+vec+com+df",

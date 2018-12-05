@@ -15,7 +15,7 @@
     {
         private static void Main(string[] args)
         {
-            Person c = new Person();
+            var c = new Person();
             Operation1(c, c);
             Operation2(c, c);
 
@@ -24,41 +24,46 @@
                 Operation1(c, c);
             else
             {
-                Operation2(c,c);                
+                Operation2(c, c);
             }
-            
+
             if (x++ > 5 && x % 2 == 0)
+
                 Operation1(c, c);
             else
             {
-                Operation2(c,c);                
+
+                Operation2(c, c);
+
             }
         }
 
         private static void Operation2(Person c1, Person c2)
         {
-            int x = c1.Father.Age;
+            var x = c1.Father.Age;
             var y = c2.Father.Father;
             var d = c2?.Father?.Father;
+
+
             var e = c2.GetGrandMothers();
             var f = c2.Father.Father;
         }
 
-         static void Operation3(Person c1, Person c2)
+        private static void Operation3(Person rightPerson, Person leftPerson)
         {
-            int x = c1.Father.Age;
-            var y = c2.Father.Father;
-            var d = c2?.Father?.Father;
-            var e = c2.GetGrandMothers();
-            var f = c2.Father.Father;
+            var x = rightPerson.Father.Age;
+            var y = leftPerson.Father.Father;
+            var d = leftPerson?.Father?.Father;
+            var e = leftPerson.GetGrandMothers();
+            var f = leftPerson.Father.Father;
         }
 
         private static void Operation1(Person c1, Person c2)
         {
-            int x = c1.Father.Age;
+            var x = c1.Father.Age;
             var y = c2.Father.Father;
             var d = c2?.Father?.Father;
-            var e = c2.GetGrandMothers();
+            var e = c2.GetGrandGrandMothers();
             var f = c2.Father.Father;
         }
     }

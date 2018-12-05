@@ -1,0 +1,5 @@
+Target: C:\Git Repos\NUnit\nunit\src\NUnitFramework\nunitlite\nunitlite-4.5.csproj
+Minimum depth:35
+Config: sub+vec+seman+df+refactInvoc+refactMember
+Runtime in ms: 395
+SUB+VEC+SEMAN+DF+REFACTINVOC+REFACTMEMBER:305>46360>9>9>8>5>5>5
