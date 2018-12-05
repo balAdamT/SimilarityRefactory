@@ -3,7 +3,6 @@ using System;
 
 namespace SimilarityAnalyzer.SimilarityTree.SuperTree
 {
-    //TODO Consider creating an interface to avoid multiple bases problem
     public class SyntaxLeafPair<TRepresentation> : ISyntaxPair<TRepresentation> where TRepresentation : ISyntaxRepresentation
     {
         public TRepresentation Left { get; set; }

@@ -34,15 +34,6 @@ namespace SimilarityAnalyzer.SyntaxVectors.Representation
             return kindValue * kindValue * kindValue;
         }
 
-        public int this[SyntaxKind key]
-        {
-            get
-            {
-                // TODO
-                return 0;
-            }
-        }
-
         public override bool Equals(object obj)
         {
             var other = obj as SyntaxVector;
