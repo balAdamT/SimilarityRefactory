@@ -18,9 +18,9 @@ namespace SimilarityAnalyzer.SyntaxComparision.Algorithm
             this.minDepth = minDepth;
         }
 
-        public IEnumerable<SyntaxNode> Fetch()
+        public IEnumerable<SyntaxNode> Fetch() 
         {
-            foreach (MethodDeclarationSyntax method
+             foreach (MethodDeclarationSyntax method
               in @class.Members.Where(member => member.Kind() == SyntaxKind.MethodDeclaration))
                 foreach (var node in method.DescendantNodes().Where(node => node.DescendantNodes().Count() > minDepth))
                     yield return node;

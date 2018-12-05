@@ -49,6 +49,9 @@
             var f = c2.Father.Father;
         }
 
+
+
+
         private static void Operation3(Person rightPerson, Person leftPerson)
         {
             var x = rightPerson.Father.Age;
