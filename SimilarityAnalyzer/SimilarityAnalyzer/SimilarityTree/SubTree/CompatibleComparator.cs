@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace SimilarityAnalyzer.SimilarityTree.SubTree
-{y
+{
     public class CompatibleComparator<TPair, TRepresentation, TInformation> : ISyntaxComparator<TPair, TRepresentation, TInformation>
       where TRepresentation : ISyntaxRepresentation
       where TPair : ISyntaxPair<TRepresentation>

@@ -66,7 +66,7 @@
             var x = c1.Father.Age;
             var y = c2.Father.Father;
             var d = c2?.Father?.Father;
-            var e = c2.GetGrandGrandMothers();
+            var e = c2.GetGrandFathers();
             var f = c2.Father.Father;
         }
     }
