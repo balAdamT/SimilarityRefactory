@@ -53,7 +53,9 @@ namespace SimilarityAnalyzer.SimilarityTree.SubTree
 
         private IEnumerable<IdentifierNameSyntax> GetMemberIdentifiers(SyntaxNode node)
         {
-            return node.DescendantNodes().OfType<IdentifierNameSyntax>().Where(n => n.FirstAncestorOrSelf<ArgumentListSyntax>() == null);
+            return node.DescendantNodes().OfType<IdentifierNameSyntax>()
+                .Where(n => n.FirstAncestorOrSelf<ArgumentListSyntax>() == null)
+                .Where(n => n.FirstAncestorOrSelf<BracketedArgumentListSyntax>() == null);
         }
 
         private bool ChildrenEquals(IEnumerable<SyntaxNode> leftChildren, IEnumerable<SyntaxNode> rightChildren)
